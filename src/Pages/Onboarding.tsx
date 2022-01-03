@@ -1,80 +1,78 @@
 import React from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
-import styled from 'styled-components/native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 const Onboarding = () => {
   return (
-    <Container>
-      <Contents>
+    <View style={styles.container}>
+      <View style={styles.contents}>
         <Image source={require('../Assets/sumHeart.png')} />
-        <GreetText>안녕하세요? 반가워요</GreetText>
-        <IntroText>
+        <Text style={textStyle.greetText}>안녕하세요? 반가워요</Text>
+        <Text style={textStyle.introText}>
           마음은 따뜻한 1:1 소셜 통화 앱이에요.{'\n'}
           지금 대화 친구를 만나세요!
-        </IntroText>
-      </Contents>
-      <Footer>
-        <StartBtn onPress={() => {}} style={{ paddingVertical: 20 }}>
-          <StartText>시작하기</StartText>
-        </StartBtn>
-        <NoticeText>
+        </Text>
+      </View>
+      <View style={styles.footer}>
+        <Pressable onPress={() => {}} style={styles.startBtn}>
+          <Text style={textStyle.startBtnText}>시작하기</Text>
+        </Pressable>
+        <Text style={textStyle.noticeText}>
           가입 시 이용약관 및 개인정보 취급방침에 동의하게 됩니다.
-        </NoticeText>
-      </Footer>
-    </Container>
+        </Text>
+      </View>
+    </View>
   );
 };
 
 export default Onboarding;
 
-const Container = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
+const textStyle = StyleSheet.create({
+  greetText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 34,
+    marginRight: 12,
+    marginVertical: 20,
+  },
+  introText: {
+    fontSize: 18,
+    color: '#999999',
+    textAlign: 'center',
+    lineHeight: 28.8,
+  },
+  startBtnText: {
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  noticeText: {
+    fontSize: 12,
+    color: '#999999',
+    letterSpacing: -0.01,
+  },
+});
 
-const Contents = styled.View`
-  align-items: center;
-`;
-
-const GreetText = styled.Text`
-  font-size: 20px;
-  font-weight: 700;
-  margin: 34px 0 12px 0;
-`;
-
-const IntroText = styled.Text`
-  font-size: 18px;
-  font-weight: 500;
-  color: #999999;
-  text-align: center;
-  line-height: 28.8px;
-`;
-
-const Footer = styled.View`
-  position: absolute;
-  bottom: 60px;
-  width: 100%;
-  align-items: center;
-`;
-
-const StartBtn = styled.Pressable`
-  width: 90%;
-  background: #ff787e;
-  border-radius: 30px;
-  margin-bottom: 16px;
-`;
-
-const StartText = styled.Text`
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  color: #ffffff;
-`;
-
-const NoticeText = styled.Text`
-  font-size: 12px;
-  font-weight: 500;
-  color: #999999;
-  /* letter-spacing: '-0.01'; */
-`;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contents: {
+    alignItems: 'center',
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 60,
+    width: '100%',
+    alignItems: 'center',
+  },
+  startBtn: {
+    width: '90%',
+    backgroundColor: '#ff787e',
+    borderRadius: 30,
+    marginBottom: 16,
+    paddingVertical: 20,
+  },
+});
