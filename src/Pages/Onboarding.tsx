@@ -13,7 +13,7 @@ const Onboarding = () => {
         </Text>
       </View>
       <View style={styles.footer}>
-        <Pressable onPress={() => {}} style={styles.startBtn}>
+        <Pressable style={styles.startBtn}>
           <Text style={textStyle.startBtnText}>시작하기</Text>
         </Pressable>
         <Text style={textStyle.noticeText}>
