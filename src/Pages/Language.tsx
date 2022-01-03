@@ -1,11 +1,11 @@
-import React, { createElement, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View, Button, Pressable, ColorPropType } from "react-native";
+import LangBtn from "../Components/LangBtn";
 
 const Language = () => {
-
     const [selectLang, setSelect] = useState(false); 
-
     const [isPressedK, setPressedK] = useState(false);
+
     const changePressedK = () => {
         if(isPressedK == false){
             if(selectLang == false){
@@ -39,6 +39,7 @@ const Language = () => {
             if(selectLang == false){
                 setSelect(true)
                 setPressedJ(true)
+                
             }
         }
         if(isPressedJ == true) {
@@ -46,7 +47,6 @@ const Language = () => {
             setPressedJ(false)
         }
     }
-
 
     return (
         <View style={{flex: 1, flexDirection: "column"}}>
@@ -60,23 +60,20 @@ const Language = () => {
             </View>
 
             <View style={{marginTop: 48}}>
-                <Pressable style = { styles.wrapLang } onPress={changePressedK}>
+                <Pressable style = {styles.wrapLang} onPress={changePressedK}>
                     {
                         <Text 
-                        style = {{ fontSize: 36, color:`${isPressedK?"#FF787E":"#D6D9DF" }`, fontWeight:"bold"}}>
+                        style = {{fontSize: 36, color:`${isPressedK?"#FF787E":"#D6D9DF"}`, fontWeight:"bold"}}>
                         한국어
                         </Text>
                     }
                     {(isPressedK) &&
                     <View style = {styles.spotlight}>
-                        <Text style = {styles.spotlightTxt}>1순위, 기징 능숙헤요</Text>
+                        <Text style = {styles.spotlightTxt}>1순위, 가장 능숙해요</Text>
                     </View>
                 
-                    }   
+                    }
                 </Pressable>
-                
-                
-                
                 <Pressable style = {styles.wrapLang} onPress={changePressedE}>
                     {
                         <Text 
@@ -86,12 +83,11 @@ const Language = () => {
                     }
                     {(isPressedE) &&
                     <View style = {styles.spotlight}>
-                        <Text style = {styles.spotlightTxt}>1순위, 기징 능숙헤요</Text>
+                        <Text style = {styles.spotlightTxt}>1순위, 가장 능숙해요</Text>
                     </View>
-                
                     }
                 </Pressable>
-                
+                    
 
                 <Pressable style = { styles.wrapLang} onPress={changePressedJ}>
                     {
@@ -102,11 +98,12 @@ const Language = () => {
                     }
                     {(isPressedJ) &&
                     <View style = {styles.spotlight}>
-                        <Text style = {styles.spotlightTxt}>1순위, 기징 능숙헤요</Text>
+                        <Text style = {styles.spotlightTxt}>1순위, 가장 능숙해요</Text>
                     </View>
-                
                     }
                 </Pressable>
+
+                {/* <LangBtn langName={"한국어"} changePressed = {changePressedK} isPressed={isPressedK}/> */}
                 
             </View>
             
@@ -163,7 +160,6 @@ const styles = StyleSheet.create({
         right: 30,
         bottom: 50,
         alignItems: "center",
-        padding: "22 36 18",
     },
 
     roundBtn: {
@@ -199,3 +195,24 @@ const styles = StyleSheet.create({
 });
 
 export default Language;
+
+    // const [isPressed, setPressed] = useState([false, false, false]);
+
+    // const changePressed = (lang : number) => {
+    //     if(isPressed[lang] == false){
+    //         if(selectLang == false){
+    //             setSelect(true)
+
+    //             const tempList = isPressed
+    //             tempList[lang] = true
+                
+    //             setPressed(tempList)
+    //         }
+    //     }
+    //     if(isPressed[lang] == true){
+    //         setSelect(false)
+    //         let tempList = isPressed
+    //         tempList[lang] = false
+    //         setPressed(tempList)
+    //     }
+    // }
