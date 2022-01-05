@@ -1,27 +1,43 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
+import Typography from './Typography';
 
 // 컴포넌트 사용 예시
-// <RoundBtn value={"다음"} width = {315} />
+// <RoundBtn value='다음' onPress={()=>{}}/>
 
-const RoundBtn = (props: any) => {
-  const style1 = {
-    height: 60,
-    backgroundColor: '#FF787E',
-    borderRadius: 30,
-    width: props.width,
-    justifyContent: 'center',
-    alignItems: 'center',
-  };
+interface RoudnBtnProps {
+  value: string;
+  onPress: () => void;
+  containerStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+}
 
+const RoundBtn: React.FC<RoudnBtnProps> = props => {
+  const { value, onPress, containerStyle, textStyle } = props;
   return (
-    <Pressable {...style1}>
-      <Text style={styles.roundBtnText}>{props.value}</Text>
+    <Pressable
+      onPress={onPress}
+      style={[styles.roundBtn, containerStyle, textStyle]}>
+      <Typography value={value} textStyle={styles.roundBtnText} />
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
+  roundBtn: {
+    height: 60,
+    backgroundColor: '#FF787E',
+    borderRadius: 30,
+    width: 107,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   roundBtnText: {
     fontSize: 20,
     fontWeight: '700',

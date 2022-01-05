@@ -30,7 +30,7 @@ const Language = () => {
       <View style={{ alignItems: 'center', marginTop: 47 }}>
         <Typography
           value="2 / 3"
-          TextStyle={{ fontWeight: '700', color: '#D6D9DF', fontSize: 16 }}
+          textStyle={{ fontWeight: '700', color: '#D6D9DF', fontSize: 16 }}
         />
         <Typography value="언어 선택" type="title" />
         <View

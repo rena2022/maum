@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import DropDownPicker from 'react-native-dropdown-picker';
+import DropDownPicker, { ValueType } from 'react-native-dropdown-picker';
 
 const DropDown = () => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState<ValueType | null>(null);
   const [items, setItems] = useState([
     { label: '+82', value: 'kor' },
     { label: '+81', value: 'jp' },
     { label: '+1', value: 'en' },
   ]);
+
   return (
     <DropDownPicker
       open={open}

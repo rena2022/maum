@@ -1,12 +1,13 @@
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import Typography from '../Components/Typography';
 
 const Onboarding = () => {
   return (
     <View style={styles.container}>
       <View style={styles.contents}>
         <Image source={require('../Assets/sumHeart.png')} />
-        <Text style={textStyle.greetText}>안녕하세요? 반가워요</Text>
+        <Typography type="title" value="greetText" />
         <Text style={textStyle.introText}>
           마음은 따뜻한 1:1 소셜 통화 앱이에요.{'\n'}
           지금 대화 친구를 만나세요!

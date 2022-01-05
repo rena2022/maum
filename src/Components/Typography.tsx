@@ -1,5 +1,5 @@
 import React from 'react';
-import { ViewPropTypes } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import {
   StyleProp,
   StyleSheet,
@@ -9,33 +9,30 @@ import {
 } from 'react-native';
 
 // 사용 예시
-// <TextStyle value={'언어 선택'} fontSize={30} color={'#FF787E'} weight={'700'}/>
+// <TextStyle value='언어 선택' type='default' />
 
 interface TypographyProps {
   value: string;
   type?: 'default' | 'title' | 'subTitle';
   containerStyle?: StyleProp<ViewStyle>;
-  TextStyle?: StyleProp<TextStyle>;
+  textStyle?: StyleProp<TextStyle>;
 }
 
 const Typography: React.FC<TypographyProps> = props => {
-  const { type = 'default', value = '', containerStyle, TextStyle } = props;
+  const { type = 'default', value, containerStyle, textStyle } = props;
+  const { t } = useTranslation();
 
   let myStyle;
 
-  if (props.type == 'default') {
+  if (type == 'default') {
     myStyle = styles.default;
-  } else if (props.type == 'title') {
+  } else if (type == 'title') {
     myStyle = styles.title;
-  } else if (props.type == 'subTitle') {
+  } else if (type == 'subTitle') {
     myStyle = styles.subTitle;
   }
 
-  return (
-    <Text style={[myStyle, props.containerStyle, props.TextStyle]}>
-      {props.value}
-    </Text>
-  );
+  return <Text style={[myStyle, containerStyle, textStyle]}>{t(value)}</Text>;
 };
 
 const styles = StyleSheet.create({

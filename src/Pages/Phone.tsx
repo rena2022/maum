@@ -1,15 +1,8 @@
-import React, { useRef, useState } from 'react';
-import {
-  Image,
-  Text,
-  View,
-  StyleSheet,
-  Pressable,
-  TextInput,
-} from 'react-native';
+import React, { useState } from 'react';
+import { Image, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import DropDown from '../Components/DropDown';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
-import DropDown from '../Components/DropDown';
 
 const Phone = () => {
   const [input, setInput] = useState('');
@@ -25,13 +18,13 @@ const Phone = () => {
         <Pressable>
           <Typography
             value="< 이전"
-            TextStyle={{ color: '#007AFF' }}
+            textStyle={{ color: '#007AFF' }}
             containerStyle={styles.before}
           />
         </Pressable>
         <Typography
           value="1 / 3"
-          TextStyle={{ color: '#B6B9BF', fontWeight: '700' }}
+          textStyle={{ color: '#B6B9BF', fontWeight: '700' }}
           containerStyle={styles.page}
         />
       </View>
@@ -61,7 +54,13 @@ const Phone = () => {
       </View>
 
       <View style={styles.rightAlign}>
-        <RoundBtn value="인증번호 받기" width={182} />
+        <RoundBtn
+          value="인증번호 받기"
+          containerStyle={{ width: 182 }}
+          onPress={() => {
+            return;
+          }}
+        />
       </View>
       <DropDown />
     </View>
