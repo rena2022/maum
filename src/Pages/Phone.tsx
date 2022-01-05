@@ -9,31 +9,10 @@ import {
 } from 'react-native';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
-
-import DropDownPicker from 'react-native-dropdown-picker';
 import DropDown from '../Components/DropDown';
 
 const Phone = () => {
-  const [inputs, setInputs] = useState({ phoneNum: '' });
-  const inputRef = useRef(null);
-
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: '+82', value: 'kor' },
-    { label: '+81', value: 'jp' },
-    { label: '+1', value: 'en' },
-  ]);
-
-  const { phoneNum } = inputs;
-
-  const onChange = e => {
-    const { value, phoneNum } = e.target;
-    setInputs({
-      ...inputs,
-      [phoneNum]: value,
-    });
-  };
+  const [input, setInput] = useState('');
 
   return (
     <View
@@ -70,16 +49,14 @@ const Phone = () => {
         <Typography value="안심하세요! 번호는 암호화되며," type="subTitle" />
         <Typography value="절대 공개되지 않아요" type="subTitle" />
 
-        
         <TextInput
           placeholder="전화번호"
           keyboardType="numeric"
           autoFocus={true}
           style={styles.inputBox}
-          onChange={onChange}
-          ref={inputRef}
+          onChangeText={text => setInput(text)}
+          value={input}
         />
-
         <View style={styles.divider}></View>
       </View>
 
