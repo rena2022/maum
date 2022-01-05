@@ -8,18 +8,13 @@ const Phone = () => {
   const [input, setInput] = useState('');
 
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'column',
-        width: '100%',
-      }}>
-      <View style={styles.marginStyle}>
+    <View style={styles.centerAlign}>
+      <View style={styles.rowAlign}>
         <Pressable>
           <Typography
             value="< 이전"
-            textStyle={{ color: '#007AFF' }}
-            containerStyle={styles.before}
+            TextStyle={{ color: '#007AFF' }}
+            containerStyle={styles.beforeBtn}
           />
         </Pressable>
         <Typography
@@ -68,24 +63,26 @@ const Phone = () => {
 };
 
 const styles = StyleSheet.create({
-  marginStyle: {
+  centerAlign: {
+    flex: 1,
+    flexDirection: 'column',
+    height: '100%',
+  },
+  rowAlign: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     marginTop: 47,
     marginBottom: 13,
   },
-  rightAlign: {
-    marginTop: 24,
-    marginRight: 30,
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  before: {
+
+  beforeBtn: {
     position: 'absolute',
     left: 25,
     top: '5%',
   },
   page: {
     position: 'absolute',
-    left: '47%',
+    left: '46%',
     top: '5%',
   },
   inputBox: {
@@ -102,6 +99,12 @@ const styles = StyleSheet.create({
     height: 2,
     marginTop: 10,
     backgroundColor: '#FF787E',
+  },
+
+  rightAlign: {
+    marginTop: 24,
+    marginRight: 30,
+    alignItems: 'flex-end',
   },
 });
 
