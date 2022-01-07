@@ -1,9 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { RootStackParamList } from '../../App';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
+
+const { height } = Dimensions.get('window');
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
 
@@ -65,11 +67,12 @@ const textStyle = StyleSheet.create({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   contents: {
     alignItems: 'center',
+    position: 'absolute',
+    top: height * 0.33,
   },
   footer: {
     position: 'absolute',

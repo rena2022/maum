@@ -11,6 +11,7 @@ const { languageTag } =
 const languageCode = languageTag.split('-')[0];
 
 i18n.use(initReactI18next).init({
+  compatibilityJSON: 'v3',
   resources,
   lng: languageTag,
   fallbackLng: ['en', 'ko'],
