@@ -1,6 +1,15 @@
 import React from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+} from 'react-native';
 import Typography from '../Components/Typography';
+
+const { height } = Dimensions.get('window');
 
 const Onboarding = () => {
   return (
@@ -57,11 +66,12 @@ const textStyle = StyleSheet.create({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   contents: {
     alignItems: 'center',
+    position: 'absolute',
+    top: height * 0.33,
   },
   footer: {
     position: 'absolute',
