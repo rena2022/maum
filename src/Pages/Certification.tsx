@@ -4,29 +4,20 @@ import Typography from '../Components/Typography';
 import Timer from '../Components/Timer';
 import RoundBtn from '../Components/RoundBtn';
 import PinInput from '../Components/PinInput';
+import CustomHeader from '../Components/CustomHeader';
 
 const Certification = () => {
   const [isFilled, setFilled] = useState(false);
 
   return (
     <View style={styles.flexAlign}>
-      {/* Header */}
-      <View style={styles.rowAlign}>
-        <Pressable>
-          <Typography
-            value="< 이전"
-            textStyle={{ color: '#007AFF' }}
-            containerStyle={styles.beforeBtn}
-          />
-        </Pressable>
-        <Typography
-          value="1 / 3"
-          textStyle={{ color: '#B6B9BF', fontWeight: '700' }}
-          containerStyle={styles.page}
-        />
-      </View>
+      <CustomHeader isBack={true} />
       {/* 메인 */}
-      <Typography value="인증번호 입력" type="title" />
+      <Typography
+        value="인증번호 입력"
+        type="title"
+        containerStyle={{ marginTop: 13 }}
+      />
       <Typography value="전화번호" type="subTitle" />
       <Timer />
       <PinInput setFilled={setFilled} />
