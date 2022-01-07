@@ -1,6 +1,8 @@
 [
   {
-    "__comment1__": "ONBOARDING PAGE",
+    "__comment1__": "NAVIGATION",
+    "backBtnText": "이전",
+    "__comment2__": "ONBOARDING PAGE",
     "greetText": "안녕하세요? 반가워요"
   }
 ]

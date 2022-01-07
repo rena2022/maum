@@ -38,7 +38,7 @@ const Typography: React.FC<TypographyProps> = props => {
 const styles = StyleSheet.create({
   default: {
     fontSize: 16,
-    color: '##333333',
+    color: '#333333',
     fontWeight: '400',
     textAlign: 'center',
   },
