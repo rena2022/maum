@@ -1,34 +1,43 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-} from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import { RootStackParamList } from '../../App';
+import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 
 const { height } = Dimensions.get('window');
 
-const Onboarding = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
+
+const Onboarding = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.contents}>
         <Image source={require('../Assets/sumHeart.png')} />
-        <Typography type="title" value="greetText" />
-        <Text style={textStyle.introText}>
-          마음은 따뜻한 1:1 소셜 통화 앱이에요.{'\n'}
-          지금 대화 친구를 만나세요!
-        </Text>
+        <Typography
+          type="title"
+          value="greetText"
+          textStyle={textStyle.greetText}
+        />
+        <Typography
+          type="subTitle"
+          value={
+            '마음은 따뜻한 1:1 소셜 통화 앱이에요.\n지금 대화 친구를 만나세요!'
+          }
+          textStyle={textStyle.introText}
+        />
       </View>
       <View style={styles.footer}>
-        <Pressable style={styles.startBtn}>
-          <Text style={textStyle.startBtnText}>시작하기</Text>
-        </Pressable>
-        <Text style={textStyle.noticeText}>
-          가입 시 이용약관 및 개인정보 취급방침에 동의하게 됩니다.
-        </Text>
+        <RoundBtn
+          value="시작하기"
+          onPress={() => navigation.navigate('Language')}
+          containerStyle={styles.startBtn}
+        />
+        <Typography
+          type="subTitle"
+          value="가입 시 이용약관 및 개인정보 취급방침에 동의하게 됩니다."
+          textStyle={textStyle.noticeText}
+        />
       </View>
     </View>
   );
@@ -39,27 +48,19 @@ export default Onboarding;
 const textStyle = StyleSheet.create({
   greetText: {
     fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 34,
-    marginRight: 12,
-    marginVertical: 20,
+    lineHeight: 20,
+    marginTop: 32,
+    marginBottom: 12,
   },
   introText: {
-    fontSize: 18,
-    color: '#999999',
-    textAlign: 'center',
-    lineHeight: 28.8,
-  },
-  startBtnText: {
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#ffffff',
+    fontWeight: '500',
   },
   noticeText: {
     fontSize: 12,
+    fontWeight: '500',
     color: '#999999',
     letterSpacing: -0.01,
+    lineHeight: 12,
   },
 });
 
@@ -75,15 +76,12 @@ const styles = StyleSheet.create({
   },
   footer: {
     position: 'absolute',
-    bottom: 60,
+    bottom: 32,
     width: '100%',
     alignItems: 'center',
   },
   startBtn: {
-    width: '90%',
-    backgroundColor: '#ff787e',
-    borderRadius: 30,
+    width: 335,
     marginBottom: 16,
-    paddingVertical: 20,
   },
 });

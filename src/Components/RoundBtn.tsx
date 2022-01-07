@@ -21,10 +21,8 @@ interface RoudnBtnProps {
 const RoundBtn: React.FC<RoudnBtnProps> = props => {
   const { value, onPress, containerStyle, textStyle } = props;
   return (
-    <Pressable
-      onPress={onPress}
-      style={[styles.roundBtn, containerStyle, textStyle]}>
-      <Typography value={value} textStyle={styles.roundBtnText} />
+    <Pressable onPress={onPress} style={[styles.roundBtn, containerStyle]}>
+      <Typography value={value} textStyle={[styles.roundBtnText, textStyle]} />
     </Pressable>
   );
 };
