@@ -16,13 +16,23 @@ interface RoudnBtnProps {
   onPress: () => void;
   containerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  disabled?: boolean;
 }
 
 const RoundBtn: React.FC<RoudnBtnProps> = props => {
-  const { value, onPress, containerStyle, textStyle } = props;
+  const {
+    value,
+    onPress,
+    containerStyle: containerStyle,
+    textStyle,
+    disabled = false,
+  } = props;
   return (
-    <Pressable onPress={onPress} style={[styles.roundBtn, containerStyle]}>
-      <Typography value={value} textStyle={[styles.roundBtnText, textStyle]} />
+    <Pressable
+      disabled={disabled}
+      onPress={onPress}
+      style={[styles.roundBtn, containerStyle, textStyle]}>
+      <Typography value={value} textStyle={styles.roundBtnText} />
     </Pressable>
   );
 };
