@@ -1,6 +1,8 @@
 [
   {
-    "__comment1__": "ONBOARDING PAGE",
+    "__comment1__": "NAVIGATION",
+    "backBtnText": "Back",
+    "__comment2__": "ONBOARDING PAGE",
     "greetText": "Hello? Welcome"
   }
 ]
