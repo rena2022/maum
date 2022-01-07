@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 
 const Language = () => {
@@ -24,7 +25,6 @@ const Language = () => {
       setPressed(tempList);
     }
   };
-
   return (
     <View style={{ flex: 1, flexDirection: 'column' }}>
       <View style={{ alignItems: 'center', marginTop: 47 }}>
@@ -100,17 +100,26 @@ const Language = () => {
         </Pressable>
       </View>
 
-      <View style={styles.wrapBtn}>
-        <Pressable
-          style={() => [{ opacity: selectLang ? 1 : 0.3 }, styles.roundBtn]}>
-          <Text style={styles.roundBtnText}>다음</Text>
-        </Pressable>
-      </View>
+      <RoundBtn
+        value="다음"
+        containerStyle={[{ opacity: selectLang ? 1 : 0.3 }, styles.wrapBtn]}
+        disabled={!selectLang}
+        onPress={() => {
+          console.log('hello');
+        }}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapBtn: {
+    position: 'absolute',
+    right: 30,
+    bottom: 50,
+    alignItems: 'center',
+  },
+
   wrapLang: {
     width: '100%',
     marginBottom: 24,
@@ -119,29 +128,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-
-  wrapBtn: {
-    position: 'absolute',
-    right: 30,
-    bottom: 50,
-    alignItems: 'center',
-  },
-
-  roundBtn: {
-    width: 106,
-    height: 60,
-    backgroundColor: '#FF787E',
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  roundBtnText: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: 'white',
-  },
-
   spotlight: {
     backgroundColor: '#FAE7E9',
     width: 117,

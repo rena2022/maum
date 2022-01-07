@@ -15,30 +15,28 @@ const DropDown = () => {
       open={open}
       value={value}
       items={items}
+      placeholder={items[0].label}
       setOpen={setOpen}
       setValue={setValue}
       setItems={setItems}
       closeAfterSelecting={true}
-      placeholder="국가"
-      categorySelectable={true}
       stickyHeader={true}
       style={{
         backgroundColor: '#00ff0000',
-        width: 85,
+        width: 90,
         borderColor: '#00ff0000',
         marginLeft: 30,
       }}
       textStyle={{
-        fontSize: 15,
+        fontSize: 18,
         fontWeight: '500',
         lineHeight: 18,
       }}
       containerStyle={{
-        width: 85,
-        position: 'absolute',
-        left: '0%',
-        height: 17,
-        top: '29.5%',
+        width: 95,
+        height: 8,
+        marginRight: 14,
+        zIndex: 3,
       }}
     />
   );
