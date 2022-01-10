@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import DropDownPicker, { ValueType } from 'react-native-dropdown-picker';
 
-const DropDown = () => {
+interface DropdownProps {
+  getNation: (n: string) => void;
+}
+
+const DropDown: React.FC<DropdownProps> = props => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<ValueType | null>(null);
   const [items, setItems] = useState([
@@ -19,6 +23,10 @@ const DropDown = () => {
       setOpen={setOpen}
       setValue={setValue}
       setItems={setItems}
+      onSelectItem={item => {
+        const label = '' + item['label'];
+        props.getNation(label);
+      }}
       closeAfterSelecting={true}
       stickyHeader={true}
       style={{

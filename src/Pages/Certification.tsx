@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import Typography from '../Components/Typography';
 import Timer from '../Components/Timer';
 import RoundBtn from '../Components/RoundBtn';
 import PinInput from '../Components/PinInput';
-import CustomHeader from '../Components/CustomHeader';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Certification = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Certification'>;
+
+const Certification = ({ navigation, route }: Props) => {
   const [isFilled, setFilled] = useState(false);
+  const { phoneNum } = route.params;
 
   return (
-    <View style={styles.flexAlign}>
-      <CustomHeader isBack={true} />
+    <SafeAreaView style={styles.flexAlign}>
       {/* 메인 */}
-      <Typography
-        value="인증번호 입력"
-        type="title"
-        containerStyle={{ marginTop: 13 }}
-      />
-      <Typography value="전화번호" type="subTitle" />
+      <Typography value="인증번호 입력" type="title" />
+      <Typography value={phoneNum} type="subTitle" />
       <Timer />
       <PinInput setFilled={setFilled} />
       {/* Bottom */}
@@ -30,12 +30,12 @@ const Certification = () => {
           value="확인"
           disabled={isFilled ? false : true}
           onPress={() => {
-            console.log('hello');
+            navigation.reset({ routes: [{ name: 'Language' }] });
           }}
           containerStyle={{ opacity: isFilled ? 1 : 0.3 }}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -43,12 +43,11 @@ const styles = StyleSheet.create({
   flexAlign: {
     flex: 1,
     flexDirection: 'column',
-    height: '100%',
   },
   rowAlign: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: 47,
+    marginTop: 30,
     marginBottom: 30,
   },
   page: {
