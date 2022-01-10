@@ -4,8 +4,9 @@ import {
   NativeStackNavigationOptions,
 } from '@react-navigation/native-stack';
 import React from 'react';
-import { i18n } from './i18n.cofig';
+
 import Certification from './src/Pages/Certification';
+
 import Language from './src/Pages/Language';
 import Onboarding from './src/Pages/Onboarding';
 import Permission from './src/Pages/Permission';
