@@ -13,7 +13,7 @@ const Onboarding = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.contents}>
-        <Image source={require('../Assets/sumHeart.png')} />
+        <Image source={require('../Assets/Onboarding/sumHeart.png')} />
         <Typography
           type="title"
           value="greetText"
