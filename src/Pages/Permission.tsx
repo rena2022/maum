@@ -1,12 +1,15 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import { RootStackParamList } from '../../App';
 import AuthContent from '../Components/AuthContent';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 
 const { height } = Dimensions.get('window');
+type Props = NativeStackScreenProps<RootStackParamList, 'Permission'>;
 
-const Permission = () => {
+const Permission = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleWrap}>
@@ -31,7 +34,7 @@ const Permission = () => {
         <RoundBtn
           value="확인"
           onPress={() => {
-            return;
+            navigation.reset({ routes: [{ name: 'Home' }] });
           }}
           containerStyle={styles.checkBtn}
         />

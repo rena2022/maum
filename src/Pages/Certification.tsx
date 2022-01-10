@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   flexAlign: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: 'white',
   },
   rowAlign: {
     flexDirection: 'row',
