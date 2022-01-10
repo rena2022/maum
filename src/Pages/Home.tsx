@@ -11,12 +11,12 @@ const Home = () => {
         <View style={styles.maskBox}>
           <Image
             style={styles.mask}
-            source={require('../Assets/userMask.png')}
+            source={require('../Assets/Home/userMask.png')}
           />
           <Pressable>
             <Image
               style={styles.editBtn}
-              source={require('../Assets/userProfileEditBtn.png')}
+              source={require('../Assets/Home/userProfileEditBtn.png')}
             />
           </Pressable>
         </View>
@@ -40,7 +40,7 @@ const Home = () => {
       <View style={styles.findFriendWrap}>
         <Image
           style={styles.findFriendBtn}
-          source={require('../Assets/findFriendBtn.png')}
+          source={require('../Assets/Home/findFriendBtn.png')}
         />
         <View style={styles.findFriendBtnTextWrap}>
           <Typography value="대화친구" textStyle={textStyle.findBtnTextTop} />
