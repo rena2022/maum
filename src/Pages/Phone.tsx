@@ -1,17 +1,32 @@
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { Image, Pressable, StyleSheet, TextInput, View } from 'react-native';
-import CustomHeader from '../Components/CustomHeader';
+import {
+  Image,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
+import { RootStackParamList } from '../../App';
 import DropDown from '../Components/DropDown';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 
-const Phone = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
+
+const Phone = ({ navigation }: Props) => {
   const [input, setInput] = useState('');
   const [isFocus, setFocus] = useState(false);
 
+  const [nation, setNation] = useState('+82');
+  const getNation = (n: string) => {
+    setNation(n);
+  };
+
   return (
-    <View style={styles.flexAlign}>
-      <CustomHeader isBack={true} />
+    <SafeAreaView style={styles.flexAlign}>
       <View style={{ alignItems: 'center' }}>
         <Image
           source={require('../Assets/Authorise/lock.png')}
@@ -21,11 +36,11 @@ const Phone = () => {
         <Typography value="안심하세요! 번호는 암호화되며," type="subTitle" />
         <Typography value="절대 공개되지 않아요" type="subTitle" />
         <View style={[styles.tempStyle, { zIndex: 2 }]}>
-          <DropDown />
+          <DropDown getNation={getNation} />
           <TextInput
             placeholder="전화번호"
             keyboardType="numeric"
-            autoFocus={false}
+            autoFocus={true}
             style={styles.inputBox}
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}
@@ -54,12 +69,15 @@ const Phone = () => {
           marginLeft: 180,
         }}
         onPress={() => {
-          return;
+          const fullNum = nation + ' ' + input;
+          console.log(fullNum);
+
+          navigation.navigate('Certification', { phoneNum: fullNum });
         }}
         disabled={input == ''}
       />
       {/* </View> */}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -67,7 +85,6 @@ const styles = StyleSheet.create({
   flexAlign: {
     flex: 1,
     flexDirection: 'column',
-    height: '100%',
   },
   imgStyle: {
     width: 23.33,

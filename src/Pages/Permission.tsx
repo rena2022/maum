@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
 import AuthContent from '../Components/AuthContent';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
@@ -8,7 +8,7 @@ const { height } = Dimensions.get('window');
 
 const Permission = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.titleWrap}>
         <Typography
           type="title"
@@ -36,7 +36,7 @@ const Permission = () => {
           containerStyle={styles.checkBtn}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   titleWrap: {
-    marginTop: height * 0.11,
+    marginTop: 52.43,
     marginBottom: height * 0.07,
   },
   footer: {

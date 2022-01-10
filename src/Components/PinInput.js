@@ -19,7 +19,6 @@ const PinInput = props => {
       }}
       onComplete={completedValue => {
         props.setFilled(true);
-        alert('Completed! Value: ' + completedValue);
       }}
       style={styles.container}
     />
