@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { RootStackParamList } from '../../App';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
@@ -29,7 +29,7 @@ const Language = ({ navigation }: Props) => {
     }
   };
   return (
-    <View style={{ flex: 1, flexDirection: 'column' }}>
+    <SafeAreaView style={styles.flexAlign}>
       <View style={{ alignItems: 'center', marginTop: 13 }}>
         <Typography value="언어 선택" type="title" />
         <View
@@ -108,11 +108,12 @@ const Language = ({ navigation }: Props) => {
           // navigation.replace('Permission');
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  flexAlign: { flex: 1, flexDirection: 'column', backgroundColor: 'white' },
   wrapBtn: {
     position: 'absolute',
     right: 30,

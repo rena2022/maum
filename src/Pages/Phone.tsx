@@ -1,14 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import {
-  Image,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  TextInput,
-  View,
-} from 'react-native';
+import { Image, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
 import { RootStackParamList } from '../../App';
 import DropDown from '../Components/DropDown';
 import RoundBtn from '../Components/RoundBtn';
@@ -85,6 +77,7 @@ const styles = StyleSheet.create({
   flexAlign: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: 'white',
   },
   imgStyle: {
     width: 23.33,

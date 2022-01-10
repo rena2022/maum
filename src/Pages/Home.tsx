@@ -1,8 +1,9 @@
 import React from 'react';
-import { Image, Pressable, StyleSheet, View, Text } from 'react-native';
+import { Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Typography from '../Components/Typography';
 
+const { width, height } = Dimensions.get('window');
 const Home = () => {
   return (
     <SafeAreaView style={styles.container}>
@@ -63,10 +64,12 @@ const textStyle = StyleSheet.create({
   findBtnTextTop: {
     fontSize: 30,
     color: '#ffffff',
+    fontWeight: '400',
   },
   findBtnTextBottom: {
     fontSize: 64,
     color: '#ffffff',
+    fontWeight: '400',
   },
 });
 
@@ -103,6 +106,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute',
+    top: height / 2 - 150,
+    left: width / 2 - 150,
   },
   findFriendBtn: {
     width: 300,
