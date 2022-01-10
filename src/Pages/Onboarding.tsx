@@ -30,7 +30,7 @@ const Onboarding = ({ navigation }: Props) => {
       <View style={styles.footer}>
         <RoundBtn
           value="시작하기"
-          onPress={() => navigation.navigate('Language')}
+          onPress={() => navigation.navigate('Phone')}
           containerStyle={styles.startBtn}
         />
         <Typography

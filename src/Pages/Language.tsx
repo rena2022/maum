@@ -1,9 +1,12 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { RootStackParamList } from '../../App';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 
-const Language = () => {
+type Props = NativeStackScreenProps<RootStackParamList>;
+const Language = ({ navigation }: Props) => {
   const [selectLang, setSelect] = useState(false);
   const [isPressed, setPressed] = useState([false, false, false]);
 
@@ -27,11 +30,7 @@ const Language = () => {
   };
   return (
     <View style={{ flex: 1, flexDirection: 'column' }}>
-      <View style={{ alignItems: 'center', marginTop: 47 }}>
-        <Typography
-          value="2 / 3"
-          textStyle={{ fontWeight: '700', color: '#D6D9DF', fontSize: 16 }}
-        />
+      <View style={{ alignItems: 'center', marginTop: 13 }}>
         <Typography value="언어 선택" type="title" />
         <View
           style={{
@@ -105,7 +104,8 @@ const Language = () => {
         containerStyle={[{ opacity: selectLang ? 1 : 0.3 }, styles.wrapBtn]}
         disabled={!selectLang}
         onPress={() => {
-          console.log('hello');
+          navigation.reset({ routes: [{ name: 'Permission' }] });
+          // navigation.replace('Permission');
         }}
       />
     </View>
