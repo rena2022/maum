@@ -62,8 +62,6 @@ const Phone = ({ navigation }: Props) => {
         }}
         onPress={() => {
           const fullNum = nation + ' ' + input;
-          console.log(fullNum);
-
           navigation.navigate('Certification', { phoneNum: fullNum });
         }}
         disabled={input == ''}
