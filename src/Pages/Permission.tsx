@@ -1,8 +1,15 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  Dimensions,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { RootStackParamList } from '../../App';
 import AuthContent from '../Components/AuthContent';
+import { locationPermission } from '../Components/LocationPermission';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 
@@ -10,6 +17,8 @@ const { height } = Dimensions.get('window');
 type Props = NativeStackScreenProps<RootStackParamList, 'Permission'>;
 
 const Permission = ({ navigation }: Props) => {
+  locationPermission(Platform.OS);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleWrap}>
