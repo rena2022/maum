@@ -1,10 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Typography from '../Components/Typography';
 
 const { width, height } = Dimensions.get('window');
+
+interface ILocation {
+  latitude: number;
+  longitude: number;
+}
 const Home = () => {
+  const [location, setLocation] = useState<ILocation | undefined>(undefined);
+
+  useEffect(() => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        setLocation({
+          latitude,
+          longitude,
+        });
+        console.log(latitude);
+      },
+      error => {
+        console.log(error.code, error.message);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 1000 },
+    );
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileWrap}>
@@ -30,6 +55,7 @@ const Home = () => {
             type="subTitle"
             textStyle={textStyle.detailInfoText}
           />
+
           <Typography
             value="😍 12"
             type="subTitle"
