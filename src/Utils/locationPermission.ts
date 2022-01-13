@@ -1,10 +1,31 @@
-import React from 'react';
 import { Alert, Linking, PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import { checkMultiple, PERMISSIONS } from 'react-native-permissions';
+import { navigationProp } from '../Pages/Permission';
 
-export const locationPermission = (os: string) => {
+export const checkGeoPermission = async () => {
+  try {
+    const checkResult = Object.values(
+      await checkMultiple([
+        PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+        PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
+      ]),
+    )[0];
+    return checkResult;
+  } catch (err) {
+    throw new Error();
+  }
+};
+
+export const getLocationPermission = (
+  os: string,
+  navigation: navigationProp,
+) => {
   if (os === 'ios')
     Geolocation.requestAuthorization('always').then(result => {
+      if (result === 'granted') {
+        navigation.reset({ routes: [{ name: 'Home' }] });
+      }
       goSetting(result);
     });
   else if (os === 'android') {
@@ -12,13 +33,16 @@ export const locationPermission = (os: string) => {
       PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
       modalMsg[0],
     ).then(result => {
+      if (result === 'granted') {
+        navigation.reset({ routes: [{ name: 'Home' }] });
+      }
       goSetting(result);
     });
   }
 };
 
 const goSetting = (result: string) => {
-  if (result == 'denied') {
+  if (result === 'denied') {
     Alert.alert('위치 정보', 'Maum을 이용하기 위해 위치 정보가 필요해요', [
       {
         text: '권한 설정하러 가기',
