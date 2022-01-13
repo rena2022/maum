@@ -1,4 +1,7 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import React from 'react';
 import {
   Dimensions,
@@ -9,15 +12,27 @@ import {
 } from 'react-native';
 import { RootStackParamList } from '../../App';
 import AuthContent from '../Components/AuthContent';
-import { locationPermission } from '../Components/LocationPermission';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
+import { getLocationPermission } from '../Utils/locationPermission';
+import { checkMicPermission, getMicPermission } from '../Utils/micPermission';
 
 const { height } = Dimensions.get('window');
 type Props = NativeStackScreenProps<RootStackParamList, 'Permission'>;
+export type navigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Permission'
+>;
 
 const Permission = ({ navigation }: Props) => {
-  locationPermission(Platform.OS);
+  async function handlePermission(navigation: navigationProp) {
+    const device = Platform.OS;
+    const checkMicResult = await checkMicPermission();
+    if (checkMicResult === 'granted') {
+      getLocationPermission(device, navigation);
+    }
+    await getMicPermission(checkMicResult);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,7 +58,7 @@ const Permission = ({ navigation }: Props) => {
         <RoundBtn
           value="확인"
           onPress={() => {
-            navigation.reset({ routes: [{ name: 'Home' }] });
+            handlePermission(navigation);
           }}
           containerStyle={styles.checkBtn}
         />

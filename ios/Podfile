@@ -15,6 +15,9 @@ target 'maum' do
   permissions_path = '../node_modules/react-native-permissions/ios'
 
   pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone"
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
+  pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
+  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
 
   target 'maumTests' do
     inherit! :complete

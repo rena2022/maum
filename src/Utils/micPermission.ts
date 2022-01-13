@@ -2,6 +2,7 @@ import { Alert, AlertButton, Linking } from 'react-native';
 import {
   checkMultiple,
   PERMISSIONS,
+  PermissionStatus,
   requestMultiple,
 } from 'react-native-permissions';
 
@@ -21,16 +22,12 @@ const iosMicRationale: {
   ],
 };
 
-export const getMicPermission = async () => {
-  const checkResult = await checkMicPermission();
+export const getMicPermission = async (checkResult: PermissionStatus) => {
   if (checkResult === 'denied') {
     await requestMicPermission();
   }
   if (checkResult === 'blocked') {
     alertRationale();
-  }
-  if (checkResult === 'granted') {
-    return true;
   }
 };
 
@@ -42,7 +39,6 @@ export const checkMicPermission = async () => {
         PERMISSIONS.ANDROID.RECORD_AUDIO,
       ]),
     )[0];
-    console.log('check ', checkResult);
     return checkResult;
   } catch (err) {
     throw new Error();
@@ -57,7 +53,9 @@ export const requestMicPermission = async () => {
         PERMISSIONS.ANDROID.RECORD_AUDIO,
       ]),
     )[0];
-    console.log('req ', requestResults);
+    if (requestResults === 'blocked') {
+      alertRationale();
+    }
   } catch (err) {
     throw new Error();
   }
