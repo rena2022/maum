@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import Typography from '../Components/Typography';
-import Timer from '../Components/Timer';
-import RoundBtn from '../Components/RoundBtn';
-import PinInput from '../Components/PinInput';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { RootStackParamList } from '../../App';
+import PinInput from '../Components/PinInput';
+import RoundBtn from '../Components/RoundBtn';
+import Timer from '../Components/Timer';
+import Typography from '../Components/Typography';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Certification'>;
 
@@ -30,6 +30,7 @@ const Certification = ({ navigation, route }: Props) => {
           value="확인"
           disabled={isFilled ? false : true}
           onPress={() => {
+            // 인증번호 검사
             navigation.reset({ routes: [{ name: 'Language' }] });
           }}
           containerStyle={{ opacity: isFilled ? 1 : 0.3 }}

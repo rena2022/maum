@@ -1,18 +1,21 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Image, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
+import { resetGenericPassword } from 'react-native-keychain';
 import { RootStackParamList } from '../../App';
 import DropDown from '../Components/DropDown';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
+import { testToken } from '../Constants/testValue';
+import { saveToken } from '../Services/keychain';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
 
 const Phone = ({ navigation }: Props) => {
   const [input, setInput] = useState('');
   const [isFocus, setFocus] = useState(false);
-
   const [nation, setNation] = useState('+82');
+
   const getNation = (n: string) => {
     setNation(n);
   };
@@ -51,7 +54,6 @@ const Phone = ({ navigation }: Props) => {
         />
       </View>
 
-      {/* <View style={[styles.rightAlign, { zIndex: 1 }]}> */}
       <RoundBtn
         value="인증번호 받기"
         containerStyle={{
@@ -60,9 +62,15 @@ const Phone = ({ navigation }: Props) => {
           marginTop: 24,
           marginLeft: 180,
         }}
-        onPress={() => {
+        onPress={async () => {
           const fullNum = nation + ' ' + input;
+          // 서버로 요청 후 (인증번호, TempToken) 응답으로 받음
+          // if(res === ok) + 인증번호 넘겨주기
+          await resetGenericPassword({ service: 'temptoken' });
+          await saveToken('temptoken', testToken.TEMPTOKEN);
           navigation.navigate('Certification', { phoneNum: fullNum });
+          // if(res !== no)
+          // 유효하지 않은 전화번호 메세지
         }}
         disabled={input == ''}
       />
