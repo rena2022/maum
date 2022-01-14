@@ -1,9 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { RootStackParamList } from '../../App';
+import { ACCESSTOKEN, REFRESHTOKEN, RootStackParamList } from '../../App';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
+import { testToken } from '../Constants/testValue';
+import { saveToken } from '../Services/keychain';
 
 type Props = NativeStackScreenProps<RootStackParamList>;
 const Language = ({ navigation }: Props) => {
@@ -103,7 +105,11 @@ const Language = ({ navigation }: Props) => {
         value="다음"
         containerStyle={[{ opacity: selectLang ? 1 : 0.3 }, styles.wrapBtn]}
         disabled={!selectLang}
-        onPress={() => {
+        onPress={async () => {
+          // (temp 토큰, 인증번호, 언어 서버로 전송)
+          // (유효한 사용자면 access, refresh 토큰 받음)
+          await saveToken('accesstoken', testToken.ACCESSTOKEN);
+          await saveToken('refreshtoken', testToken.REFRESHTOKEN);
           navigation.reset({ routes: [{ name: 'Permission' }] });
           // navigation.replace('Permission');
         }}
