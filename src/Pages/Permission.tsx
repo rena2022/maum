@@ -31,7 +31,7 @@ const Permission = ({ navigation }: Props) => {
     if (checkMicResult === 'granted') {
       getLocationPermission(device, navigation);
     }
-    await getMicPermission(checkMicResult);
+    await getMicPermission(checkMicResult, navigation);
   }
 
   return (
