@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Dimensions,
   Image,
@@ -10,12 +10,19 @@ import {
 import { RootStackParamList } from '../../App';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
+import { service } from '../Services/index';
 
 const { height } = Dimensions.get('window');
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
 
 const Onboarding = ({ navigation }: Props) => {
+  useEffect(() => {
+    service.user.getUserInfo('1234').then(data => {
+      console.log();
+    });
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contents}>
