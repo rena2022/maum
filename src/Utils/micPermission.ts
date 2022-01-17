@@ -1,10 +1,12 @@
-import { Alert, AlertButton, Linking } from 'react-native';
+import { Alert, AlertButton, Linking, Platform } from 'react-native';
 import {
   checkMultiple,
   PERMISSIONS,
   PermissionStatus,
   requestMultiple,
 } from 'react-native-permissions';
+import { navigationProp } from '../Pages/Permission';
+import { getLocationPermission } from './locationPermission';
 
 const iosMicRationale: {
   title: string;
@@ -22,9 +24,16 @@ const iosMicRationale: {
   ],
 };
 
-export const getMicPermission = async (checkResult: PermissionStatus) => {
+export const getMicPermission = async (
+  checkResult: PermissionStatus,
+  navigation: navigationProp,
+) => {
   if (checkResult === 'denied') {
-    await requestMicPermission();
+    const isMicGranted = await requestMicPermission();
+    if (isMicGranted) {
+      const device = Platform.OS;
+      getLocationPermission(device, navigation);
+    }
   }
   if (checkResult === 'blocked') {
     alertRationale();
@@ -55,6 +64,9 @@ export const requestMicPermission = async () => {
     )[0];
     if (requestResults === 'blocked') {
       alertRationale();
+    }
+    if (requestResults === 'granted') {
+      return true;
     }
   } catch (err) {
     throw new Error();
