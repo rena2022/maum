@@ -1,6 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
-import { Image, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { resetGenericPassword } from 'react-native-keychain';
 import { RootStackParamList } from '../../App';
 import DropDown from '../Components/DropDown';
@@ -8,6 +15,7 @@ import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 import { testToken } from '../Constants/testValue';
 import { saveToken } from '../Services/keychain';
+import { service } from '../Services/index';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
 
@@ -68,13 +76,20 @@ const Phone = ({ navigation }: Props) => {
           // if(res === ok) + 인증번호 넘겨주기
           await resetGenericPassword({ service: 'temptoken' });
           await saveToken('temptoken', testToken.TEMPTOKEN);
-          navigation.navigate('Certification', { phoneNum: fullNum });
           // if(res !== no)
           // 유효하지 않은 전화번호 메세지
+          const data = await service.auth.verifyPhoneNum(nation, input);
+
+          // setCertificationNum(data.certificationNum);
+          // console.log(certificationNum);
+
+          navigation.navigate('Certification', {
+            phoneNum: fullNum,
+            certificationNum: data.certificationNum,
+          });
         }}
         disabled={input == ''}
       />
-      {/* </View> */}
     </SafeAreaView>
   );
 };

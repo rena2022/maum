@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RootStackParamList } from '../../App';
 import PinInput from '../Components/PinInput';
@@ -12,7 +12,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Certification'>;
 
 const Certification = ({ navigation, route }: Props) => {
   const [isFilled, setFilled] = useState(false);
-  const { phoneNum } = route.params;
+  const [isCorrect, setCorrect] = useState(false);
+  const { phoneNum, certificationNum } = route.params;
 
   return (
     <SafeAreaView style={styles.flexAlign}>
@@ -20,7 +21,11 @@ const Certification = ({ navigation, route }: Props) => {
       <Typography value="인증번호 입력" type="title" />
       <Typography value={phoneNum} type="subTitle" />
       <Timer />
-      <PinInput setFilled={setFilled} />
+      <PinInput
+        setFilled={setFilled}
+        setCorrect={setCorrect}
+        certificationNum={certificationNum}
+      />
       {/* Bottom */}
       <View style={[{ justifyContent: 'space-around' }, styles.rowAlign]}>
         <View style={styles.spotlight}>
@@ -31,7 +36,9 @@ const Certification = ({ navigation, route }: Props) => {
           disabled={isFilled ? false : true}
           onPress={() => {
             // 인증번호 검사
-            navigation.reset({ routes: [{ name: 'Language' }] });
+            isCorrect
+              ? navigation.reset({ routes: [{ name: 'Language' }] })
+              : Alert.alert('올바른 인증번호를 입력해주세요.');
           }}
           containerStyle={{ opacity: isFilled ? 1 : 0.3 }}
         />

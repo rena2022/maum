@@ -1,59 +1,34 @@
-export interface AuthPhone {
-    tempToken: string;
-    certificationNum: string;
+import {
+  AuthPhone,
+  Enroll,
+  IAuthRepository,
+  NewToken,
+  SignIn,
+  SignUp,
+} from './AuthRepository';
+
+class AuthRepository implements IAuthRepository {
+  async verifyPhoneNum(
+    countryCode: string,
+    phoneNum: string,
+  ): Promise<AuthPhone> {
+    return { tempToken: 'thisistemptoen1', certificationNum: '123456' };
   }
-  
-  export interface SignIn {
-    isJoin: true;
-    accessToken: string;
-    refreshToken: string;
+
+  async checkUser(tempToken: string): Promise<SignIn | SignUp> {
+    return { isJoin: false, tempToken: '' };
   }
-  
-  export interface SignUp {
-    isJoin: false;
-    tempToken: string;
+
+  async enrollUser(tempToken: string, language: string): Promise<Enroll> {
+    return { accessToken: '', refreshToken: '' };
   }
-  
-  export interface Enroll {
-    accessToken: string;
-    refreshToken: string;
+
+  async verifyToken(
+    accessToken: string,
+    refreshToken: string,
+  ): Promise<NewToken> {
+    return { isValid: true, accessToken: '' };
   }
-  
-  export interface NewToken {
-    isValid: boolean;
-    accessToken: string;
-  }
-  
-  export interface IAuthRepository {
-    verifyPhoneNum(countryCode: string, phoneNum: string): Promise<AuthPhone>;
-    checkUser(tempToken: string): Promise<SignIn | SignUp>;
-    enrollUser(tempToken: string, language: string): Promise<Enroll>;
-    verifyToken(accessToken: string, refreshToken: string): Promise<NewToken>;
-  }
-  
-  class AuthRepository implements IAuthRepository {
-    async verifyPhoneNum(
-      countryCode: string,
-      phoneNum: string,
-    ): Promise<AuthPhone> {
-      return { tempToken: '', certificationNum: '' };
-    }
-  
-    async checkUser(tempToken: string): Promise<SignIn | SignUp> {
-      return { isJoin: false, tempToken: '' };
-    }
-  
-    async enrollUser(tempToken: string, language: string): Promise<Enroll> {
-      return { accessToken: '', refreshToken: '' };
-    }
-  
-    async verifyToken(
-      accessToken: string,
-      refreshToken: string,
-    ): Promise<NewToken> {
-      return { isValid: true, accessToken: '' };
-    }
-  }
-  
-  export default AuthRepository;
-  
+}
+
+export default AuthRepository;
