@@ -15,7 +15,7 @@ import Phone from './src/Pages/Phone';
 export type RootStackParamList = {
   Onboarding: undefined;
   Phone: undefined;
-  Certification: { phoneNum: string; certificationNum: string };
+  Certification: { phoneNum: string; authCode: string };
   Language: undefined;
   Permission: undefined;
   Home: undefined;

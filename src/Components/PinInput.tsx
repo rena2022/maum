@@ -5,14 +5,14 @@ import { KeycodeInput } from 'react-native-keycode';
 interface pinProps {
   setFilled: Dispatch<SetStateAction<boolean>>;
   setCorrect: Dispatch<SetStateAction<boolean>>;
-  certificationNum: string;
+  authCode: string;
 }
 const PinInput: React.FC<pinProps> = props => {
   const [value, setValue] = useState('');
 
   useEffect(() => {
-    if (props.certificationNum != '') {
-      setValue(props.certificationNum);
+    if (props.authCode != '') {
+      setValue(props.authCode);
       props.setFilled(true);
       props.setCorrect(true);
     }
@@ -25,16 +25,17 @@ const PinInput: React.FC<pinProps> = props => {
         length={6}
         textColor="#333333"
         tintColor="#FF787E"
+        numeric={true}
         onComplete={data => {
           // eslint-disable-next-line react/prop-types
           props.setFilled(true);
-          if (data == props.certificationNum) {
+          if (data == props.authCode) {
             props.setCorrect(true);
           } else {
             props.setCorrect(false);
           }
         }}
-        onChange={data => {
+        onChange={() => {
           props.setFilled(false);
         }}
         style={styles.container}

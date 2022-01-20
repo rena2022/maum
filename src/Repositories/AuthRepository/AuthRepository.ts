@@ -1,6 +1,10 @@
+import axios from 'axios';
+import PhoneAlert from '../../Utils/PhoneAlert';
+
 export interface AuthPhone {
-  tempToken: string;
-  certificationNum: string;
+  authToken: string;
+  authCode: string;
+  message: string;
 }
 
 export interface SignIn {
@@ -25,7 +29,7 @@ export interface NewToken {
 }
 
 export interface IAuthRepository {
-  verifyPhoneNum(countryCode: string, phoneNum: string): Promise<AuthPhone>;
+  verifyPhoneNum(nationalCode: number, phoneNumber: string): Promise<AuthPhone>;
   checkUser(tempToken: string): Promise<SignIn | SignUp>;
   enrollUser(tempToken: string, language: string): Promise<Enroll>;
   verifyToken(accessToken: string, refreshToken: string): Promise<NewToken>;
@@ -33,10 +37,25 @@ export interface IAuthRepository {
 
 class AuthRepository implements IAuthRepository {
   async verifyPhoneNum(
-    countryCode: string,
-    phoneNum: string,
+    nationalCode: number,
+    phoneNumber: string,
   ): Promise<AuthPhone> {
-    return { tempToken: '', certificationNum: '' };
+    const data = await axios
+      .get('http://localhost:8080/v1/auth', {
+        params: {
+          nationalCode,
+          phoneNumber,
+        },
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        const status = error.response.status;
+        PhoneAlert(status);
+        return false;
+      });
+    return data;
   }
 
   async checkUser(tempToken: string): Promise<SignIn | SignUp> {

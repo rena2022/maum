@@ -7,7 +7,7 @@ class AuthService {
     this.authRepository = AuthRepository;
   }
 
-  async verifyPhoneNum(countryCode: string, phoneNum: string) {
+  async verifyPhoneNum(countryCode: number, phoneNum: string) {
     return await this.authRepository.verifyPhoneNum(countryCode, phoneNum);
   }
 
