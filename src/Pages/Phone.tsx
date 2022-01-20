@@ -1,16 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import axios from 'axios';
 import React, { useState } from 'react';
 import { Image, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
-import { resetGenericPassword } from 'react-native-keychain';
 import { RootStackParamList } from '../../App';
 import DropDown from '../Components/DropDown';
-import PhoneAlert, { networkCheck } from '../Utils/PhoneAlert';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
-import { testToken } from '../Constants/testValue';
-import { getToken, saveToken } from '../Utils/keychain';
 import { service } from '../Services/index';
+import { resetToken, saveToken } from '../Utils/keychain';
+import { networkCheck } from '../Utils/PhoneAlert';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
 
@@ -75,7 +72,7 @@ const Phone = ({ navigation }: Props) => {
           // status 체크 - 통신 실패 시 data에 status를 number로 반환 함
           // if(res == ok) + 인증번호 넘겨주기
           if (data) {
-            await resetGenericPassword({ service: 'authToken' });
+            await resetToken('authToken');
             await saveToken('authToken', data['authToken']);
 
             navigation.navigate('Certification', {

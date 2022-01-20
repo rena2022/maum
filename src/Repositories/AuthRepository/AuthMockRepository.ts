@@ -9,14 +9,17 @@ import {
 
 class AuthRepository implements IAuthRepository {
   async verifyPhoneNum(
-    nationalCode: string,
+    nationalCode: number,
     phoneNumber: string,
   ): Promise<AuthPhone> {
-    return { tempToken: '', authCode: '234523', message: 'OK' };
+    return { authCode: '', message: '', authToken: '' };
   }
 
-  async checkUser(tempToken: string): Promise<SignIn | SignUp> {
-    return { isJoin: false, tempToken: '' };
+  async checkUser(
+    authCode: string,
+    authToken: string,
+  ): Promise<SignIn | SignUp> {
+    return { type: 'new', token: '' };
   }
 
   async enrollUser(tempToken: string, language: string): Promise<Enroll> {

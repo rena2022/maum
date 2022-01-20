@@ -1,12 +1,14 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RootStackParamList } from '../../App';
 import PinInput from '../Components/PinInput';
 import RoundBtn from '../Components/RoundBtn';
 import Timer from '../Components/Timer';
 import Typography from '../Components/Typography';
+import { service } from '../Services/index';
+import { getToken, resetToken, saveToken } from '../Utils/keychain';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Certification'>;
 
@@ -14,6 +16,40 @@ const Certification = ({ navigation, route }: Props) => {
   const [isFilled, setFilled] = useState(false);
   const [isCorrect, setCorrect] = useState(false);
   const { phoneNum, authCode } = route.params;
+
+  async function handleAuthBtn() {
+    try {
+      const authToken = await getToken('authToken');
+      if (authToken) {
+        const res = await service.auth.authRepository.checkUser(
+          authCode,
+          authToken,
+        );
+        if (res.type === 'new') {
+          if (isCorrect) {
+            await resetToken('authToken');
+            await saveToken('authToken', res.authToken);
+            navigation.reset({
+              routes: [{ name: 'Language', params: { phoneNum } }],
+            });
+          } else Alert.alert('올바른 인증번호를 입력해주세요.');
+        } else {
+          if (isCorrect) {
+            await saveToken('accessToken', res.accessToken);
+            await saveToken('refreshToken', res.refreshToken);
+            // 유저 아이디 요청 필요.
+            /** @description User"Mock"Reopsitory */
+            const userData = await service.user.getUserInfo('777');
+            navigation.reset({
+              routes: [{ name: 'Home', params: { userData } }],
+            });
+          } else Alert.alert('올바른 인증번호를 입력해주세요.');
+        }
+      }
+    } catch (error) {
+      Alert.alert('인증번호 입력시간을 초과 했습니다.');
+    }
+  }
 
   return (
     <SafeAreaView style={styles.flexAlign}>
@@ -34,12 +70,7 @@ const Certification = ({ navigation, route }: Props) => {
         <RoundBtn
           value="확인"
           disabled={!isFilled}
-          onPress={() => {
-            // 인증번호 검사
-            isCorrect
-              ? navigation.reset({ routes: [{ name: 'Language' }] })
-              : Alert.alert('올바른 인증번호를 입력해주세요.');
-          }}
+          onPress={handleAuthBtn}
           containerStyle={{ opacity: isFilled ? 1 : 0.3 }}
         />
       </View>
