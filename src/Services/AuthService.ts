@@ -11,8 +11,8 @@ class AuthService {
     return await this.authRepository.verifyPhoneNum(countryCode, phoneNum);
   }
 
-  async checkUser(tempToken: string) {
-    return await this.authRepository.checkUser(tempToken);
+  async checkUser(authCode: string, authToken: string) {
+    return await this.authRepository.checkUser(authCode, authToken);
   }
 
   async enrollUser(tempToken: string, language: string) {

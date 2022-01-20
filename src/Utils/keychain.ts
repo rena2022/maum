@@ -11,3 +11,7 @@ export async function getToken(service: string) {
     });
   if (tokenObj) return tokenObj.password;
 }
+
+export async function resetToken(service: string) {
+  await Keychain.resetGenericPassword({ service });
+}
