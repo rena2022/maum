@@ -1,20 +1,15 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Image, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
 import { resetGenericPassword } from 'react-native-keychain';
 import { RootStackParamList } from '../../App';
 import DropDown from '../Components/DropDown';
+import PhoneAlert, { networkCheck } from '../Utils/PhoneAlert';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 import { testToken } from '../Constants/testValue';
-import { saveToken } from '../Services/keychain';
+import { getToken, saveToken } from '../Utils/keychain';
 import { service } from '../Services/index';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
@@ -22,9 +17,9 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
 const Phone = ({ navigation }: Props) => {
   const [input, setInput] = useState('');
   const [isFocus, setFocus] = useState(false);
-  const [nation, setNation] = useState('+82');
+  const [nation, setNation] = useState(82);
 
-  const getNation = (n: string) => {
+  const getNation = (n: number) => {
     setNation(n);
   };
 
@@ -71,22 +66,23 @@ const Phone = ({ navigation }: Props) => {
           marginLeft: 180,
         }}
         onPress={async () => {
-          const fullNum = nation + ' ' + input;
-          // 서버로 요청 후 (인증번호, TempToken) 응답으로 받음
-          // if(res === ok) + 인증번호 넘겨주기
-          await resetGenericPassword({ service: 'temptoken' });
-          await saveToken('temptoken', testToken.TEMPTOKEN);
-          // if(res !== no)
-          // 유효하지 않은 전화번호 메세지
+          const fullNum = '+' + nation + ' ' + input;
+
           const data = await service.auth.verifyPhoneNum(nation, input);
+          // 네트워크체크
+          networkCheck();
 
-          // setCertificationNum(data.certificationNum);
-          // console.log(certificationNum);
+          // status 체크 - 통신 실패 시 data에 status를 number로 반환 함
+          // if(res == ok) + 인증번호 넘겨주기
+          if (data) {
+            await resetGenericPassword({ service: 'authToken' });
+            await saveToken('authToken', data['authToken']);
 
-          navigation.navigate('Certification', {
-            phoneNum: fullNum,
-            certificationNum: data.certificationNum,
-          });
+            navigation.navigate('Certification', {
+              phoneNum: fullNum,
+              authCode: data['authCode'],
+            });
+          }
         }}
         disabled={input == ''}
       />

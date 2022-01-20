@@ -9,15 +9,10 @@ export const networkCheck = () => {
   });
 };
 
-const PhoneAlert = (status: string) => {
-  const statusNum = Number(status);
-
-  if (200 <= statusNum && statusNum < 300) {
-    return;
-  } else if (300 <= statusNum && statusNum < 400) {
+const PhoneAlert = (status: number) => {
+  if (400 <= status && status < 500) {
     Alert.alert('전화번호를 정확히 입력해주세요.');
-    return;
-  } else if (400 <= statusNum && statusNum < 500) {
+  } else if (500 <= status && status < 600) {
     Alert.alert('잠시 후 다시 시도해주세요.');
   } else return;
 };

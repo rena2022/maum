@@ -5,7 +5,7 @@ import { ACCESSTOKEN, REFRESHTOKEN, RootStackParamList } from '../../App';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 import { testToken } from '../Constants/testValue';
-import { saveToken } from '../Services/keychain';
+import { saveToken } from '../Utils/keychain';
 
 type Props = NativeStackScreenProps<RootStackParamList>;
 const Language = ({ navigation }: Props) => {

@@ -13,7 +13,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Certification'>;
 const Certification = ({ navigation, route }: Props) => {
   const [isFilled, setFilled] = useState(false);
   const [isCorrect, setCorrect] = useState(false);
-  const { phoneNum, certificationNum } = route.params;
+  const { phoneNum, authCode } = route.params;
 
   return (
     <SafeAreaView style={styles.flexAlign}>
@@ -24,7 +24,7 @@ const Certification = ({ navigation, route }: Props) => {
       <PinInput
         setFilled={setFilled}
         setCorrect={setCorrect}
-        certificationNum={certificationNum}
+        authCode={authCode}
       />
       {/* Bottom */}
       <View style={[{ justifyContent: 'space-around' }, styles.rowAlign]}>
@@ -33,7 +33,7 @@ const Certification = ({ navigation, route }: Props) => {
         </View>
         <RoundBtn
           value="확인"
-          disabled={isFilled ? false : true}
+          disabled={!isFilled}
           onPress={() => {
             // 인증번호 검사
             isCorrect

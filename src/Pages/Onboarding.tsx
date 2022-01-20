@@ -17,12 +17,6 @@ const { height } = Dimensions.get('window');
 type Props = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
 
 const Onboarding = ({ navigation }: Props) => {
-  useEffect(() => {
-    service.user.getUserInfo('1234').then(data => {
-      console.log();
-    });
-  }, []);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contents}>
