@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
 import Typography from '../Components/Typography';
+import { RootState } from '../redux/store';
 
 const { width, height } = Dimensions.get('window');
 
@@ -11,6 +13,7 @@ interface ILocation {
   longitude: number;
 }
 const Home = () => {
+  const reduxState = useSelector((state: RootState) => state);
   const [location, setLocation] = useState<ILocation | undefined>(undefined);
 
   useEffect(() => {
@@ -21,7 +24,6 @@ const Home = () => {
           latitude,
           longitude,
         });
-        console.log(latitude);
       },
       error => {
         console.log(error.code, error.message);
@@ -47,7 +49,7 @@ const Home = () => {
         </View>
         <View style={styles.infoWrap}>
           <Typography
-            value="220호 강아지손님"
+            value={reduxState.user.nickName}
             textStyle={textStyle.nameInfoText}
           />
           <Typography
