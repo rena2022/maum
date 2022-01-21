@@ -1,5 +1,6 @@
-import axios, { AxiosError } from 'axios';
-import { NativeModules } from 'react-native';
+import axios from 'axios';
+import { axiosSrc } from '../../Constants/axiosSrc';
+import { getToken } from '../../Utils/keychain';
 import PhoneAlert from '../../Utils/PhoneAlert';
 
 // verifyPhoneNum
@@ -38,6 +39,7 @@ type UserIdentifier = OriginUser | NewUser;
 export interface Enroll {
   accessToken: string;
   refreshToken: string;
+  message: string;
 }
 
 //verfiyToken
@@ -49,7 +51,8 @@ export interface NewToken {
 export interface IAuthRepository {
   verifyPhoneNum(nationalCode: number, phoneNumber: string): Promise<AuthPhone>;
   checkUser(authCode: string, authToken: string): Promise<SignIn | SignUp>;
-  enrollUser(tempToken: string, language: string): Promise<Enroll>;
+
+  enrollUser(phoneNumber: string, language: Array<number>): Promise<Enroll>;
   verifyToken(accessToken: string, refreshToken: string): Promise<NewToken>;
 }
 
@@ -58,22 +61,29 @@ class AuthRepository implements IAuthRepository {
     nationalCode: number,
     phoneNumber: string,
   ): Promise<AuthPhone> {
-    const data = await axios
-      .get('http://localhost:8080/v1/auth', {
-        params: {
-          nationalCode,
-          phoneNumber,
-        },
-      })
-      .then(response => {
-        return response.data;
-      })
-      .catch(error => {
-        const status = error.response.status;
-        PhoneAlert(status);
-        return false;
-      });
-    return data;
+    try {
+      const data = await axios
+        .get(axiosSrc.auth, {
+          params: {
+            nationalCode,
+            phoneNumber,
+          },
+        })
+        .then(response => {
+          return response.data;
+        })
+        .catch(error => {
+          const status = error.response.status;
+          PhoneAlert(status);
+          return false;
+        });
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.message);
+      }
+      throw error;
+    }
   }
 
   async checkUser(
@@ -81,9 +91,8 @@ class AuthRepository implements IAuthRepository {
     authToken: string,
   ): Promise<SignIn | SignUp> {
     try {
-      const url = 'http://localhost:8080/v1/auth';
       const res = await axios.post<UserIdentifier>(
-        url,
+        axiosSrc.auth,
         {
           authCode,
         },
@@ -116,8 +125,29 @@ class AuthRepository implements IAuthRepository {
     }
   }
 
-  async enrollUser(tempToken: string, language: string): Promise<Enroll> {
-    return { accessToken: '', refreshToken: '' };
+  async enrollUser(
+    phoneNumber: string,
+    language: Array<number>,
+  ): Promise<Enroll> {
+    try {
+      const res = await axios.post(
+        axiosSrc.user,
+        {
+          phoneNumber,
+          language,
+        },
+        {
+          headers: { Authorization: `Bearer ${await getToken('authToken')}` },
+        },
+      );
+      return res.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(String(error.response?.status));
+      } else {
+        throw error;
+      }
+    }
   }
 
   async verifyToken(

@@ -16,7 +16,7 @@ export type RootStackParamList = {
   Onboarding: undefined;
   Phone: undefined;
   Certification: { phoneNum: string; authCode: string };
-  Language: undefined;
+  Language: { phoneNum: string };
   Permission: undefined;
   Home: undefined;
 };
