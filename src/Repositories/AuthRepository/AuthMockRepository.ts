@@ -1,3 +1,4 @@
+import { resetToken, saveToken } from '../../Utils/keychain';
 import {
   AuthPhone,
   Enroll,
@@ -30,7 +31,10 @@ class AuthRepository implements IAuthRepository {
     accessToken: string,
     refreshToken: string,
   ): Promise<NewToken> {
-    return { isValid: true, accessToken: '' };
+    return {
+      accessToken: 'abc',
+      refreshToken: 'def',
+    };
   }
 }
 
