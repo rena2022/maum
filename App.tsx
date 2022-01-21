@@ -16,11 +16,15 @@ import { service } from './src/Services/index';
 import { resetToken, saveToken } from './src/Utils/keychain';
 import { checkPermissions } from './src/Utils/permissionCheck';
 
+// redux
+import { Provider as StoreProvider } from 'react-redux';
+import store from './src/redux/store';
+
 export type RootStackParamList = {
   Onboarding: undefined;
   Phone: undefined;
   Certification: { phoneNum: string; authCode: string };
-  Language: undefined;
+  Language: { phoneNum: string };
   Permission: undefined;
   Home: undefined;
 };
@@ -79,6 +83,7 @@ const App = () => {
 
   return (
     <>
+     <StoreProvider store={store}>
       {initialRouteName && (
         <NavigationContainer>
           <RootStack.Navigator
@@ -117,6 +122,7 @@ const App = () => {
           </RootStack.Navigator>
         </NavigationContainer>
       )}
+     </StoreProvider>
     </>
   );
 };
