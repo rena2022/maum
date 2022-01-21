@@ -12,6 +12,10 @@ import Onboarding from './src/Pages/Onboarding';
 import Permission from './src/Pages/Permission';
 import Phone from './src/Pages/Phone';
 
+// redux
+import { Provider as StoreProvider } from 'react-redux';
+import store from './src/redux/store';
+
 export type RootStackParamList = {
   Onboarding: undefined;
   Phone: undefined;
@@ -35,42 +39,44 @@ const options: NativeStackNavigationOptions = {
 const App = () => {
   const { t } = useTranslation();
   return (
-    <NavigationContainer>
-      <RootStack.Navigator
-        initialRouteName="Onboarding"
-        screenOptions={options}>
-        <RootStack.Screen name="Onboarding" component={Onboarding} />
-        <RootStack.Screen
-          name="Phone"
-          component={Phone}
-          options={{
-            headerShown: true,
-            title: '1 / 3',
-            headerBackTitle: t('backBtnText'),
-          }}
-        />
-        <RootStack.Screen
-          name="Certification"
-          options={{
-            headerShown: true,
-            title: '1 / 3',
-            headerBackTitle: t('backBtnText'),
-          }}>
-          {props => <Certification {...props} />}
-        </RootStack.Screen>
-        <RootStack.Screen
-          name="Language"
-          component={Language}
-          options={{
-            headerShown: true,
-            title: '2 / 3',
-            headerBackVisible: false,
-          }}
-        />
-        <RootStack.Screen name="Permission" component={Permission} />
-        <RootStack.Screen name="Home" component={Home} />
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <StoreProvider store={store}>
+      <NavigationContainer>
+        <RootStack.Navigator
+          initialRouteName="Onboarding"
+          screenOptions={options}>
+          <RootStack.Screen name="Onboarding" component={Onboarding} />
+          <RootStack.Screen
+            name="Phone"
+            component={Phone}
+            options={{
+              headerShown: true,
+              title: '1 / 3',
+              headerBackTitle: t('backBtnText'),
+            }}
+          />
+          <RootStack.Screen
+            name="Certification"
+            options={{
+              headerShown: true,
+              title: '1 / 3',
+              headerBackTitle: t('backBtnText'),
+            }}>
+            {props => <Certification {...props} />}
+          </RootStack.Screen>
+          <RootStack.Screen
+            name="Language"
+            component={Language}
+            options={{
+              headerShown: true,
+              title: '2 / 3',
+              headerBackVisible: false,
+            }}
+          />
+          <RootStack.Screen name="Permission" component={Permission} />
+          <RootStack.Screen name="Home" component={Home} />
+        </RootStack.Navigator>
+      </NavigationContainer>
+    </StoreProvider>
   );
 };
 

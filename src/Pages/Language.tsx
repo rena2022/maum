@@ -8,18 +8,21 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootStackParamList } from '../../App';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 import { service } from '../Services/index';
 import { resetToken, saveToken } from '../Utils/keychain';
+import { setUser } from '../redux/modules/userInfo';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Language'>;
 const Language = ({ navigation, route }: Props) => {
   const phoneNum = route.params['phoneNum'].split(' ')[1];
-
   const [selectLang, setSelect] = useState(false);
   const [isPressed, setPressed] = useState([false, false, false]);
+  const dispatch = useDispatch();
+
   const changePressed = (lang: number) => {
     if (!isPressed[lang]) {
       if (!selectLang) {
@@ -96,6 +99,8 @@ const Language = ({ navigation, route }: Props) => {
         onPress={async () => {
           try {
             const data = await service.auth.enrollUser(phoneNum, getLang());
+            const userInfo = await service.user.getUserInfo('123');
+            dispatch(setUser(userInfo.nickName, userInfo.profileImg));
 
             await resetToken('accessToken');
             await saveToken('accessToken', data['accessToken']);
