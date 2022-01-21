@@ -63,9 +63,12 @@ const Phone = ({ navigation }: Props) => {
           marginLeft: 180,
         }}
         onPress={async () => {
-          const fullNum = '+' + nation + ' ' + input;
+          const phoneNum = input.replace(/[-._!\s]/g, '');
+          console.log(phoneNum + 'ddd');
 
-          const data = await service.auth.verifyPhoneNum(nation, input);
+          const fullNum = '+' + nation + ' ' + phoneNum;
+
+          const data = await service.auth.verifyPhoneNum(nation, phoneNum);
           // 네트워크체크
           networkCheck();
 
@@ -74,7 +77,6 @@ const Phone = ({ navigation }: Props) => {
           if (data) {
             await resetToken('authToken');
             await saveToken('authToken', data['authToken']);
-
             navigation.navigate('Certification', {
               phoneNum: fullNum,
               authCode: data['authCode'],

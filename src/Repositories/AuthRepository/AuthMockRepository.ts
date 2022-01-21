@@ -19,11 +19,11 @@ class AuthRepository implements IAuthRepository {
     authCode: string,
     authToken: string,
   ): Promise<SignIn | SignUp> {
-    return { type: 'new', token: '' };
+    return { type: 'new', authToken: '' };
   }
 
-  async enrollUser(tempToken: string, language: string): Promise<Enroll> {
-    return { accessToken: '', refreshToken: '' };
+  async enrollUser(phoneNum: string, language: Array<number>): Promise<Enroll> {
+    return { accessToken: '', refreshToken: '', message: '' };
   }
 
   async verifyToken(
