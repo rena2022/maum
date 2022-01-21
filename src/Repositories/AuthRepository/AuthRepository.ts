@@ -1,5 +1,4 @@
-import axios, { AxiosError } from 'axios';
-import { NativeModules } from 'react-native';
+import axios from 'axios';
 import PhoneAlert from '../../Utils/PhoneAlert';
 
 // verifyPhoneNum
@@ -42,8 +41,8 @@ export interface Enroll {
 
 //verfiyToken
 export interface NewToken {
-  isValid: boolean;
   accessToken: string;
+  refreshToken: string;
 }
 
 export interface IAuthRepository {
@@ -124,7 +123,16 @@ class AuthRepository implements IAuthRepository {
     accessToken: string,
     refreshToken: string,
   ): Promise<NewToken> {
-    return { isValid: true, accessToken: '' };
+    const res = true;
+    if (res) {
+      return {
+        accessToken: '',
+        refreshToken: '',
+      };
+    } else
+      return Promise.reject('Token is unusable').catch(function () {
+        throw new Error('Token Error');
+      });
   }
 }
 
