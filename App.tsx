@@ -5,7 +5,6 @@ import {
 } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text } from 'react-native';
 import Certification from './src/Pages/Certification';
 import Home from './src/Pages/Home';
 import Language from './src/Pages/Language';
@@ -13,13 +12,11 @@ import Onboarding from './src/Pages/Onboarding';
 import Permission from './src/Pages/Permission';
 import Phone from './src/Pages/Phone';
 import { service } from './src/Services/index';
-import { resetToken, saveToken } from './src/Utils/keychain';
 import { checkPermissions } from './src/Utils/permissionCheck';
 
 // redux
 import { Provider as StoreProvider } from 'react-redux';
 import store from './src/redux/store';
-
 export type RootStackParamList = {
   Onboarding: undefined;
   Phone: undefined;
@@ -53,6 +50,7 @@ const App = () => {
         // const refreshToken = await getToken("refreshToken");
         const accessToken = undefined;
         const refreshToken = undefined;
+
         if (accessToken && refreshToken) {
           const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
             await service.auth.verifyToken(accessToken, refreshToken);
