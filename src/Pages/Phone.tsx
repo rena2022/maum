@@ -1,10 +1,12 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Image, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { RootStackParamList } from '../../App';
 import DropDown from '../Components/DropDown';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
+import { setPhoneNum } from '../redux/modules/phoneNumInfo';
 import { service } from '../Services/index';
 import { resetToken, saveToken } from '../Utils/keychain';
 import { networkCheck } from '../Utils/phoneAlert';
@@ -15,6 +17,7 @@ const Phone = ({ navigation }: Props) => {
   const [input, setInput] = useState('');
   const [isFocus, setFocus] = useState(false);
   const [nation, setNation] = useState(82);
+  const dispatch = useDispatch();
 
   const getNation = (n: number) => {
     setNation(n);
@@ -64,8 +67,7 @@ const Phone = ({ navigation }: Props) => {
         }}
         onPress={async () => {
           const phoneNum = input.replace(/[-._!\s]/g, '');
-          console.log(phoneNum + 'ddd');
-
+          dispatch(setPhoneNum(nation, phoneNum));
           const fullNum = '+' + nation + ' ' + phoneNum;
 
           const data = await service.auth.verifyPhoneNum(nation, phoneNum);
@@ -127,3 +129,6 @@ const styles = StyleSheet.create({
 });
 
 export default Phone;
+function dispatch(arg0: any) {
+  throw new Error('Function not implemented.');
+}

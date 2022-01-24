@@ -49,7 +49,8 @@ const App = () => {
         // const accessToken = await getToken("accessToken");
         // const refreshToken = await getToken("refreshToken");
         const accessToken = undefined;
-        const refreshToken = 'abc';
+        const refreshToken = undefined;
+
         if (accessToken && refreshToken) {
           const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
             await service.auth.verifyToken(accessToken, refreshToken);
@@ -70,8 +71,8 @@ const App = () => {
       } catch (error) {
         // 토큰 에러(서버 에러)
         (function errorHandler() {
-          console.log(error);
           setInitialRouteName('Onboarding');
+          throw error;
         })();
       }
     }

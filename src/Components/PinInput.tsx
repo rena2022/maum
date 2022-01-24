@@ -16,7 +16,7 @@ const PinInput: React.FC<pinProps> = props => {
       props.setFilled(true);
       props.setCorrect(true);
     }
-  }, []);
+  }, [props.authCode]);
 
   return (
     <View>
