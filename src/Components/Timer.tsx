@@ -1,10 +1,24 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { Pressable, StyleSheet, Text } from 'react-native';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { service } from '../Services/index';
 import Typography from './Typography';
 
-const Timer = () => {
+interface TimerProps {
+  setValidAuthCode: Dispatch<SetStateAction<string>>;
+}
+
+const Timer: React.FC<TimerProps> = props => {
+  const reduxState = useSelector((state: RootState) => state);
   const timerId = useRef<NodeJS.Timer | null>(null);
-  const [count, setCount] = useState(180);
+  const [count, setCount] = useState(3);
 
   // 01, 02 등 두 자리 수 반환 함수
   function numberPad(n: number, width: number) {
@@ -12,6 +26,19 @@ const Timer = () => {
     return num.length >= width
       ? num
       : new Array(width - num.length + 1).join('0') + num;
+  }
+
+  async function handleResendText() {
+    // 인증코드 재요청
+    const nationalCode = reduxState.phoneNum.nationalCode;
+    const phoneNumber = reduxState.phoneNum.phoneNumber;
+
+    const data = await service.auth.verifyPhoneNum(nationalCode, phoneNumber);
+    if (data) {
+      // 인증코드 수정
+      props.setValidAuthCode(data.authCode);
+      setCount(3);
+    }
   }
 
   useEffect(() => {
@@ -35,7 +62,7 @@ const Timer = () => {
 
   if (count <= 0) {
     return (
-      <Pressable onPress={() => setCount(180)}>
+      <Pressable onPress={handleResendText}>
         <Typography value="인증 문자 다시 받기" textStyle={styles.mmsStyle} />
       </Pressable>
     );

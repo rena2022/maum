@@ -2,11 +2,13 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
 import { RootStackParamList } from '../../App';
 import PinInput from '../Components/PinInput';
 import RoundBtn from '../Components/RoundBtn';
 import Timer from '../Components/Timer';
 import Typography from '../Components/Typography';
+import { RootState } from '../redux/store';
 import { service } from '../Services/index';
 import { getToken, resetToken, saveToken } from '../Utils/keychain';
 
@@ -16,6 +18,7 @@ const Certification = ({ navigation, route }: Props) => {
   const [isFilled, setFilled] = useState(false);
   const [isCorrect, setCorrect] = useState(false);
   const { phoneNum, authCode } = route.params;
+  const [validAuthCode, setValidAuthCode] = useState(authCode);
 
   async function handleAuthBtn() {
     try {
@@ -58,11 +61,11 @@ const Certification = ({ navigation, route }: Props) => {
       {/* 메인 */}
       <Typography value="인증번호 입력" type="title" />
       <Typography value={phoneNum} type="subTitle" />
-      <Timer />
+      <Timer setValidAuthCode={setValidAuthCode} />
       <PinInput
         setFilled={setFilled}
         setCorrect={setCorrect}
-        authCode={authCode}
+        authCode={validAuthCode}
       />
       {/* Bottom */}
       <View style={[{ justifyContent: 'space-around' }, styles.rowAlign]}>

@@ -51,8 +51,8 @@ const App = () => {
       try {
         // const accessToken = await getToken("accessToken");
         // const refreshToken = await getToken("refreshToken");
-        const accessToken = 'abc';
-        const refreshToken = 'abc';
+        const accessToken = undefined;
+        const refreshToken = undefined;
         if (accessToken && refreshToken) {
           const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
             await service.auth.verifyToken(accessToken, refreshToken);
@@ -73,8 +73,8 @@ const App = () => {
       } catch (error) {
         // 토큰 에러(서버 에러)
         (function errorHandler() {
-          console.log(error);
           setInitialRouteName('Onboarding');
+          throw error;
         })();
       }
     }
@@ -83,46 +83,46 @@ const App = () => {
 
   return (
     <>
-     <StoreProvider store={store}>
-      {initialRouteName && (
-        <NavigationContainer>
-          <RootStack.Navigator
-            initialRouteName={initialRouteName}
-            screenOptions={options}>
-            <RootStack.Screen name="Onboarding" component={Onboarding} />
-            <RootStack.Screen
-              name="Phone"
-              component={Phone}
-              options={{
-                headerShown: true,
-                title: '1 / 3',
-                headerBackTitle: t('backBtnText'),
-              }}
-            />
-            <RootStack.Screen
-              name="Certification"
-              options={{
-                headerShown: true,
-                title: '1 / 3',
-                headerBackTitle: t('backBtnText'),
-              }}>
-              {props => <Certification {...props} />}
-            </RootStack.Screen>
-            <RootStack.Screen
-              name="Language"
-              component={Language}
-              options={{
-                headerShown: true,
-                title: '2 / 3',
-                headerBackVisible: false,
-              }}
-            />
-            <RootStack.Screen name="Permission" component={Permission} />
-            <RootStack.Screen name="Home" component={Home} />
-          </RootStack.Navigator>
-        </NavigationContainer>
-      )}
-     </StoreProvider>
+      <StoreProvider store={store}>
+        {initialRouteName && (
+          <NavigationContainer>
+            <RootStack.Navigator
+              initialRouteName={initialRouteName}
+              screenOptions={options}>
+              <RootStack.Screen name="Onboarding" component={Onboarding} />
+              <RootStack.Screen
+                name="Phone"
+                component={Phone}
+                options={{
+                  headerShown: true,
+                  title: '1 / 3',
+                  headerBackTitle: t('backBtnText'),
+                }}
+              />
+              <RootStack.Screen
+                name="Certification"
+                options={{
+                  headerShown: true,
+                  title: '1 / 3',
+                  headerBackTitle: t('backBtnText'),
+                }}>
+                {props => <Certification {...props} />}
+              </RootStack.Screen>
+              <RootStack.Screen
+                name="Language"
+                component={Language}
+                options={{
+                  headerShown: true,
+                  title: '2 / 3',
+                  headerBackVisible: false,
+                }}
+              />
+              <RootStack.Screen name="Permission" component={Permission} />
+              <RootStack.Screen name="Home" component={Home} />
+            </RootStack.Navigator>
+          </NavigationContainer>
+        )}
+      </StoreProvider>
     </>
   );
 };
