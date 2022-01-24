@@ -7,7 +7,7 @@ import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 import { service } from '../Services/index';
 import { resetToken, saveToken } from '../Utils/keychain';
-import { networkCheck } from '../Utils/PhoneAlert';
+import { networkCheck } from '../Utils/phoneAlert';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
 

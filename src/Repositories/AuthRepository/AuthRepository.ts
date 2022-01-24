@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { axiosSrc } from '../../Constants/axiosSrc';
 import { getToken } from '../../Utils/keychain';
-import PhoneAlert from '../../Utils/PhoneAlert';
+import PhoneAlert from '../../Utils/phoneAlert';
 
 // verifyPhoneNum
 export interface AuthPhone {

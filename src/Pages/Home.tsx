@@ -5,6 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import Typography from '../Components/Typography';
 import { RootState } from '../redux/store';
+import Geocoder from 'react-native-geocoding';
+import { GOOGLE_MAPS_API_KEY } from '../Constants/api';
 
 const { width, height } = Dimensions.get('window');
 
@@ -13,16 +15,17 @@ interface ILocation {
   longitude: number;
 }
 const Home = () => {
+  Geocoder.init(GOOGLE_MAPS_API_KEY);
   const reduxState = useSelector((state: RootState) => state);
-  const [location, setLocation] = useState<ILocation | undefined>(undefined);
+  const [location, setLocation] = useState('');
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
       position => {
         const { latitude, longitude } = position.coords;
-        setLocation({
-          latitude,
-          longitude,
+        Geocoder.from(latitude, longitude).then(json => {
+          const location = json.results[8].formatted_address.replace(' ', ', ');
+          setLocation(location);
         });
       },
       error => {
@@ -53,7 +56,7 @@ const Home = () => {
             textStyle={textStyle.nameInfoText}
           />
           <Typography
-            value="🇰🇷 대한민국, 서울시"
+            value={location}
             type="subTitle"
             textStyle={textStyle.detailInfoText}
           />
