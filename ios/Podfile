@@ -19,9 +19,7 @@ target 'maum' do
   pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
 
-  pod 'lottie-ios', :path => '../node_modules/lottie-ios'
 
-  pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
 
   target 'maumTests' do
     inherit! :complete

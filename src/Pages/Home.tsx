@@ -7,6 +7,7 @@ import Typography from '../Components/Typography';
 import { RootState } from '../redux/store';
 import Geocoder from 'react-native-geocoding';
 import { GOOGLE_MAPS_API_KEY } from '../Constants/api';
+import LottieView from 'lottie-react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,7 +25,7 @@ const Home = () => {
       position => {
         const { latitude, longitude } = position.coords;
         Geocoder.from(latitude, longitude).then(json => {
-          const location = json.results[8].formatted_address.replace(' ', ', ');
+          const location = json.results[7].formatted_address.replace(' ', ', ');
           setLocation(location);
         });
       },
@@ -68,15 +69,14 @@ const Home = () => {
           />
         </View>
       </View>
-      <View style={styles.findFriendWrap}>
-        <Image
-          style={styles.findFriendBtn}
-          source={require('../Assets/Home/findFriendBtn.png')}
-        />
-        <View style={styles.findFriendBtnTextWrap}>
-          <Typography value="대화친구" textStyle={textStyle.findBtnTextTop} />
-          <Typography value="찾기" textStyle={textStyle.findBtnTextBottom} />
-        </View>
+      <LottieView
+        source={require('../Assets/Call/callWave.json')}
+        autoPlay
+        loop
+      />
+      <View style={styles.callBtnTxt}>
+        <Typography value="대화친구" textStyle={textStyle.findBtnTextTop} />
+        <Typography value="찾기" textStyle={textStyle.findBtnTextBottom} />
       </View>
     </SafeAreaView>
   );
@@ -133,19 +133,9 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingBottom: 2,
   },
-  findFriendWrap: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  callBtnTxt: {
     position: 'absolute',
-    top: height / 2 - 150,
-    left: width / 2 - 150,
-  },
-  findFriendBtn: {
-    width: 300,
-    height: 300,
-  },
-  findFriendBtnTextWrap: {
-    position: 'absolute',
+    top: height / 2 - 45,
+    left: width / 2 - 55,
   },
 });

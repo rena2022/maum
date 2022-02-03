@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Typography from '../Components/Typography';
+import LottieView from 'lottie-react-native';
 
 const Call = () => {
   return (
@@ -12,9 +13,10 @@ const Call = () => {
         textStyle={textStyle.callingText}
       />
       <View style={styles.callFriendWrap}>
-        <Image
-          style={styles.callFriendBtn}
-          source={require('../Assets/Call/callFriendBtn.png')}
+        <LottieView
+          source={require('../Assets/Call/callWave.json')}
+          autoPlay
+          loop
         />
         <View style={styles.callFriendBtnTextWrap}>
           <Image
