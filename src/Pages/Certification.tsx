@@ -23,33 +23,25 @@ const Certification = ({ navigation, route }: Props) => {
   async function handleAuthBtn() {
     try {
       const authToken = await getToken('authToken');
-      const res = await service.auth.authRepository.checkUser(
-        authCode,
-        authToken!,
-      );
-      if (res.type === 'new') {
-        if (isCorrect) {
-          await resetToken('authToken');
-          await saveToken('authToken', res.authToken);
+      if (isCorrect) {
+        const res = await service.auth.authRepository.checkUser(
+          authCode,
+          authToken!,
+        );
+        if (!res.isSignIn) {
           navigation.reset({
             routes: [{ name: 'Language', params: { phoneNum } }],
           });
         } else {
-          Alert.alert('올바른 인증번호를 입력해주세요.');
-        }
-      } else {
-        if (isCorrect) {
-          await saveToken('accessToken', res.accessToken);
-          await saveToken('refreshToken', res.refreshToken);
           // 유저 아이디 요청 필요.
           /** @description User"Mock"Reopsitory */
           const userData = await service.user.getUserInfo('777');
           navigation.reset({
             routes: [{ name: 'Home', params: { userData } }],
           });
-        } else {
-          Alert.alert('올바른 인증번호를 입력해주세요.');
         }
+      } else {
+        Alert.alert('올바른 인증번호를 입력해주세요.');
       }
     } catch (error) {
       Alert.alert('인증번호 입력시간을 초과 했습니다.');

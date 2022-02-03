@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { axiosSrc } from '../../Constants/axiosSrc';
-import { getToken } from '../../Utils/keychain';
+import { getToken, resetToken, saveToken } from '../../Utils/keychain';
 import PhoneAlert from '../../Utils/phoneAlert';
 
 // verifyPhoneNum
@@ -12,28 +12,27 @@ export interface AuthPhone {
 
 // checkUser
 interface OriginUser {
+  isExist: true;
   accessToken: string;
-  message: string;
   refreshToken: string;
+  message: string;
 }
 
 interface NewUser {
-  authToken: string;
-  message: number;
-}
-
-export interface SignUp {
-  type: 'new';
-  authToken: string;
-}
-
-export interface SignIn {
-  type: 'origin';
-  accessToken: string;
-  refreshToken: string;
+  isExist: false;
+  registerToken: string;
+  message: string;
 }
 
 type UserIdentifier = OriginUser | NewUser;
+
+interface SignIn {
+  isSignIn: true;
+}
+
+interface SignUp {
+  isSignIn: false;
+}
 
 // enrollUser
 export interface Enroll {
@@ -89,7 +88,7 @@ class AuthRepository implements IAuthRepository {
   async checkUser(
     authCode: string,
     authToken: string,
-  ): Promise<SignIn | SignUp> {
+  ): Promise<SignUp | SignIn> {
     try {
       const res = await axios.post<UserIdentifier>(
         axiosSrc.auth,
@@ -100,18 +99,20 @@ class AuthRepository implements IAuthRepository {
           headers: { Authorization: `Bearer ${authToken}` },
         },
       );
-      const userIdentifier = res.data;
-      if ('authToken' in userIdentifier) {
+      const isSignIn = res.data.isExist;
+      if (!isSignIn) {
+        await resetToken('registerToken');
+        await saveToken('registerToken', res.data.registerToken);
         return {
-          type: 'new',
-          authToken: userIdentifier.authToken,
+          isSignIn,
+        };
+      } else {
+        await saveToken('accessToken', res.data.accessToken);
+        await saveToken('refreshToken', res.data.refreshToken);
+        return {
+          isSignIn,
         };
       }
-      return {
-        type: 'origin',
-        accessToken: userIdentifier.accessToken,
-        refreshToken: userIdentifier.refreshToken,
-      };
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // 1. string => ExpiredToken
@@ -137,7 +138,9 @@ class AuthRepository implements IAuthRepository {
           language,
         },
         {
-          headers: { Authorization: `Bearer ${await getToken('authToken')}` },
+          headers: {
+            Authorization: `Bearer ${await getToken('registerToken')}`,
+          },
         },
       );
       return res.data;
