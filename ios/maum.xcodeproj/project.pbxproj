@@ -14,6 +14,7 @@
 		6172F2D35A4C3AA820D92908 /* libPods-maum.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-maum.a */; };
 		7EF68E3733C33B6898317E18 /* libPods-maum-maumTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-maum-maumTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A5447BDF27ABADF200E8B045 /* liblottie-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A5447BDE27ABADF200E8B045 /* liblottie-ios.a */; };
 		A5AC8C17278D51F1006D6957 /* geo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5AC8C16278D51F1006D6957 /* geo.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,7 @@
 		6423831EA8574132BED9D8CC /* libPods-maum.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-maum.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C97AB639B58BBB4B15BBE30 /* Pods-maum-maumTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-maum-maumTests.debug.xcconfig"; path = "Target Support Files/Pods-maum-maumTests/Pods-maum-maumTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = maum/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A5447BDE27ABADF200E8B045 /* liblottie-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "liblottie-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5AC8C15278D51F1006D6957 /* maum-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "maum-Bridging-Header.h"; sourceTree = "<group>"; };
 		A5AC8C16278D51F1006D6957 /* geo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = geo.swift; sourceTree = "<group>"; };
 		ABFE59519B596E51CEFDCCC0 /* libPods-maum-maumTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-maum-maumTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5447BDF27ABADF200E8B045 /* liblottie-ios.a in Frameworks */,
 				6172F2D35A4C3AA820D92908 /* libPods-maum.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -104,6 +107,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A5447BDE27ABADF200E8B045 /* liblottie-ios.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				6423831EA8574132BED9D8CC /* libPods-maum.a */,
 				ABFE59519B596E51CEFDCCC0 /* libPods-maum-maumTests.a */,
@@ -570,7 +574,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -636,7 +640,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
