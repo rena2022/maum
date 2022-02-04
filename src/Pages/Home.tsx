@@ -1,13 +1,14 @@
+import LottieView from 'lottie-react-native';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
+import Geocoder from 'react-native-geocoding';
 import Geolocation from 'react-native-geolocation-service';
+import { getLocales } from 'react-native-localize';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import Typography from '../Components/Typography';
-import { RootState } from '../redux/store';
-import Geocoder from 'react-native-geocoding';
 import { GOOGLE_MAPS_API_KEY } from '../Constants/api';
-import LottieView from 'lottie-react-native';
+import { RootState } from '../redux/store';
 
 const { width, height } = Dimensions.get('window');
 
@@ -16,7 +17,9 @@ interface ILocation {
   longitude: number;
 }
 const Home = () => {
-  Geocoder.init(GOOGLE_MAPS_API_KEY);
+  Geocoder.init(GOOGLE_MAPS_API_KEY, {
+    language: getLocales()[0].languageCode,
+  });
   const reduxState = useSelector((state: RootState) => state);
   const [location, setLocation] = useState('');
 
@@ -25,8 +28,9 @@ const Home = () => {
       position => {
         const { latitude, longitude } = position.coords;
         Geocoder.from(latitude, longitude).then(json => {
-          const location = json.results[7].formatted_address.replace(' ', ', ');
+          const location = json.results[7].formatted_address;
           setLocation(location);
+          console.log(location);
         });
       },
       error => {
@@ -69,8 +73,10 @@ const Home = () => {
           />
         </View>
       </View>
+
       <LottieView
-        source={require('../Assets/Call/callWave.json')}
+        style={styles.callBtn}
+        source={require('../Assets/Call/callBtn.json')}
         autoPlay
         loop
       />
@@ -133,9 +139,15 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingBottom: 2,
   },
+  callBtn: {
+    flex: 1,
+    alignItems: 'center',
+  },
   callBtnTxt: {
+    width: 120,
+    height: 90,
     position: 'absolute',
     top: height / 2 - 45,
-    left: width / 2 - 55,
+    left: width / 2 - 60,
   },
 });
