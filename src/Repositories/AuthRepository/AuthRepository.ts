@@ -1,7 +1,8 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { axiosSrc } from '../../Constants/axiosSrc';
 import { getToken, saveToken } from '../../Utils/keychain';
 import PhoneAlert from '../../Utils/phoneAlert';
+import { Alert } from 'react-native';
 
 // verifyPhoneNum
 export interface AuthPhone {
@@ -56,33 +57,28 @@ export interface IAuthRepository {
 }
 
 class AuthRepository implements IAuthRepository {
-  async verifyPhoneNum(
+  verifyPhoneNum(
     nationalCode: number,
     phoneNumber: string,
   ): Promise<AuthPhone> {
-    try {
-      const data = await axios
-        .get(axiosSrc.auth, {
-          params: {
-            nationalCode,
-            phoneNumber,
-          },
-        })
-        .then(response => {
-          return response.data;
-        })
-        .catch(error => {
+    const data = axios
+      .get(axiosSrc.auth, {
+        params: {
+          nationalCode,
+          phoneNumber,
+        },
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch((error: Error | AxiosError) => {
+        if (axios.isAxiosError(error) && error.response) {
           const status = error.response.status;
           PhoneAlert(status);
-          return false;
-        });
-      return data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new Error(error.message);
-      }
-      throw error;
-    }
+        }
+        throw error;
+      });
+    return data;
   }
 
   async checkUser(
@@ -113,15 +109,10 @@ class AuthRepository implements IAuthRepository {
         };
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        // 1. string => ExpiredToken
-        // if (error === "Expiretoend")
-        // 2. class ExpiredToken extends Error {}
-        // if (error instanceof ExpiredToken)
-        throw new Error(String(error.response?.status));
-      } else {
-        throw error;
+      if (axios.isAxiosError(error) && error.response) {
+        Alert.alert('인증번호 입력시간을 초과 했습니다.');
       }
+      throw error;
     }
   }
 

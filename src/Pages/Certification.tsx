@@ -23,9 +23,10 @@ const Certification = ({ navigation, route }: Props) => {
   async function handleAuthBtn() {
     try {
       const authToken = await getToken('authToken');
+
       if (isCorrect) {
         const res = await service.auth.authRepository.checkUser(
-          authCode,
+          validAuthCode,
           authToken!,
         );
         if (!res.isSignIn) {
@@ -44,7 +45,7 @@ const Certification = ({ navigation, route }: Props) => {
         Alert.alert('올바른 인증번호를 입력해주세요.');
       }
     } catch (error) {
-      Alert.alert('인증번호 입력시간을 초과 했습니다.');
+      console.info(error);
     }
   }
 

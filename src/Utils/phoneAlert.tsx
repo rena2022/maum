@@ -3,6 +3,7 @@ import NetInfo from '@react-native-community/netinfo';
 
 export const networkCheck = () => {
   NetInfo.addEventListener(state => {
+    console.log(state);
     if (!state.isConnected) {
       Alert.alert('네트워크 연결을 다시 확인해주세요.');
     }

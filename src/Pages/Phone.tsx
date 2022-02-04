@@ -66,23 +66,21 @@ const Phone = ({ navigation }: Props) => {
           marginLeft: 180,
         }}
         onPress={async () => {
-          const phoneNum = input.replace(/[-._!\s]/g, '');
-          dispatch(setPhoneNum(nation, phoneNum));
-          const fullNum = '+' + nation + ' ' + phoneNum;
-
-          const data = await service.auth.verifyPhoneNum(nation, phoneNum);
-          // 네트워크체크
-          networkCheck();
-
-          // status 체크 - 통신 실패 시 data에 status를 number로 반환 함
-          // if(res == ok) + 인증번호 넘겨주기
-          if (data) {
+          try {
+            const phoneNum = input.replace(/[-._!\s]/g, '');
+            dispatch(setPhoneNum(nation, phoneNum));
+            const fullNum = '+' + nation + ' ' + phoneNum;
+            const data = await service.auth.verifyPhoneNum(nation, phoneNum);
+            // 네트워크체크 위치 수정 필요
+            // networkCheck();
             await resetToken('authToken');
             await saveToken('authToken', data['authToken']);
             navigation.navigate('Certification', {
               phoneNum: fullNum,
               authCode: data['authCode'],
             });
+          } catch (error) {
+            console.info(error);
           }
         }}
         disabled={input == ''}
