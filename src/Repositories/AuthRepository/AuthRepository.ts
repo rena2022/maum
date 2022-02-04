@@ -128,14 +128,14 @@ class AuthRepository implements IAuthRepository {
 
   async enrollUser(
     phoneNumber: string,
-    language: Array<number>,
+    languages: Array<number>,
   ): Promise<Enroll> {
     try {
       const res = await axios.post(
         axiosSrc.user,
         {
           phoneNumber,
-          language,
+          languages,
         },
         {
           headers: {
