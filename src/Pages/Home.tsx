@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { RootStackParamList } from '../../App';
 import Typography from '../Components/Typography';
-import { GOOGLE_MAPS_API_KEY } from '../Constants/api';
+import { GOOGLE_MAPS_API_KEY } from '../Constants/keys';
 import { RootState } from '../redux/store';
 import { getToken, resetToken } from '../Utils/keychain';
 
