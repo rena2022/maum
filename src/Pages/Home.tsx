@@ -1,3 +1,4 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LottieView from 'lottie-react-native';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
@@ -6,9 +7,11 @@ import Geolocation from 'react-native-geolocation-service';
 import { getLocales } from 'react-native-localize';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
+import { RootStackParamList } from '../../App';
 import Typography from '../Components/Typography';
 import { GOOGLE_MAPS_API_KEY } from '../Constants/api';
 import { RootState } from '../redux/store';
+import { getToken, resetToken } from '../Utils/keychain';
 
 const { width, height } = Dimensions.get('window');
 
@@ -16,7 +19,9 @@ interface ILocation {
   latitude: number;
   longitude: number;
 }
-const Home = () => {
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
+const Home = ({ navigation }: Props) => {
   Geocoder.init(GOOGLE_MAPS_API_KEY, {
     language: getLocales()[0].languageCode,
   });
@@ -30,7 +35,6 @@ const Home = () => {
         Geocoder.from(latitude, longitude).then(json => {
           const location = json.results[7].formatted_address;
           setLocation(location);
-          console.log(location);
         });
       },
       error => {
@@ -73,7 +77,6 @@ const Home = () => {
           />
         </View>
       </View>
-
       <LottieView
         style={styles.callBtn}
         source={require('../Assets/Call/callBtn.json')}
@@ -83,6 +86,19 @@ const Home = () => {
       <View style={styles.callBtnTxt}>
         <Typography value="대화친구" textStyle={textStyle.findBtnTextTop} />
         <Typography value="찾기" textStyle={textStyle.findBtnTextBottom} />
+      </View>
+
+      {/* 로그아웃 */}
+      <View style={styles.logOutContainer}>
+        <Pressable
+          style={styles.logOut}
+          onPress={async () => {
+            await resetToken('refreshToken');
+            setTimeout(() => {
+              navigation.reset({ routes: [{ name: 'Onboarding' }] });
+            }, 200);
+          }}
+        />
       </View>
     </SafeAreaView>
   );
@@ -149,5 +165,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: height / 2 - 45,
     left: width / 2 - 60,
+  },
+  logOutContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    margin: 30,
+  },
+  logOut: {
+    width: 50,
+    height: 50,
+    backgroundColor: 'pink',
+    borderRadius: 25,
   },
 });
