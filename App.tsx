@@ -17,6 +17,7 @@ import { checkPermissions } from './src/Utils/permissionCheck';
 // redux
 import { Provider as StoreProvider } from 'react-redux';
 import store from './src/redux/store';
+import { getToken, saveToken } from './src/Utils/keychain';
 export type RootStackParamList = {
   Onboarding: undefined;
   Phone: undefined;
@@ -48,14 +49,17 @@ const App = () => {
       try {
         // const accessToken = await getToken("accessToken");
         // const refreshToken = await getToken("refreshToken");
-        const accessToken = undefined;
-        const refreshToken = undefined;
+        const accessToken = await getToken('accessToken');
+        const refreshToken = await getToken('refreshToken');
 
         if (accessToken && refreshToken) {
           const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-            await service.auth.verifyToken(accessToken, refreshToken);
+            await service.auth.verifyToken(refreshToken);
+
+          saveToken('accessToken', newAccessToken);
+          saveToken('refreshToken', newRefreshToken);
+
           const checkPermissionResult = await checkPermissions();
-          console.log(checkPermissionResult);
           if (!checkPermissionResult) {
             setInitialRouteName('Permission');
           } else {
