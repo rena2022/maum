@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { axiosSrc } from '../../Constants/axiosSrc';
-import { getToken, resetToken, saveToken } from '../../Utils/keychain';
+import { getToken, saveToken } from '../../Utils/keychain';
 import PhoneAlert from '../../Utils/phoneAlert';
 
 // verifyPhoneNum
@@ -52,7 +52,7 @@ export interface IAuthRepository {
   checkUser(authCode: string, authToken: string): Promise<SignIn | SignUp>;
 
   enrollUser(phoneNumber: string, language: Array<number>): Promise<Enroll>;
-  verifyToken(accessToken: string, refreshToken: string): Promise<NewToken>;
+  verifyToken(refreshToken: string): Promise<NewToken>;
 }
 
 class AuthRepository implements IAuthRepository {
@@ -101,7 +101,6 @@ class AuthRepository implements IAuthRepository {
       );
       const isSignIn = res.data.isExist;
       if (!isSignIn) {
-        await resetToken('registerToken');
         await saveToken('registerToken', res.data.registerToken);
         return {
           isSignIn,
@@ -153,15 +152,12 @@ class AuthRepository implements IAuthRepository {
     }
   }
 
-  async verifyToken(
-    accessToken: string,
-    refreshToken: string,
-  ): Promise<NewToken> {
-    const res = true;
+  async verifyToken(refreshToken: string): Promise<NewToken> {
+    const res = await axios.patch(axiosSrc.token, { refreshToken });
     if (res) {
       return {
-        accessToken: '',
-        refreshToken: '',
+        accessToken: res.data.accessToken,
+        refreshToken: res.data.refreshToken,
       };
     } else
       return Promise.reject('Token is unusable').catch(function () {

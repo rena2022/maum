@@ -1,6 +1,7 @@
 import * as Keychain from 'react-native-keychain';
 
 export async function saveToken(service: string, token: string) {
+  await resetToken(service);
   await Keychain.setGenericPassword(service, token, { service });
 }
 
