@@ -1,8 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { axiosSrc } from '../../Constants/axiosSrc';
 import { getToken, saveToken } from '../../Utils/keychain';
-import PhoneAlert from '../../Utils/phoneAlert';
-import { Alert } from 'react-native';
+import TokenError from '../../Utils/TokenError';
 
 // verifyPhoneNum
 export interface AuthPhone {
@@ -42,18 +41,12 @@ export interface Enroll {
   message: string;
 }
 
-//verfiyToken
-export interface NewToken {
-  accessToken: string;
-  refreshToken: string;
-}
-
 export interface IAuthRepository {
   verifyPhoneNum(nationalCode: number, phoneNumber: string): Promise<AuthPhone>;
   checkUser(authCode: string, authToken: string): Promise<SignIn | SignUp>;
 
   enrollUser(phoneNumber: string, language: Array<number>): Promise<Enroll>;
-  verifyToken(refreshToken: string): Promise<NewToken>;
+  verifyToken(refreshToken: string): Promise<void>;
 }
 
 class AuthRepository implements IAuthRepository {
@@ -68,13 +61,14 @@ class AuthRepository implements IAuthRepository {
           phoneNumber,
         },
       })
-      .then(response => {
+      .then(async response => {
+        await saveToken('authToken', response.data['authToken']);
         return response.data;
       })
       .catch((error: Error | AxiosError) => {
         if (axios.isAxiosError(error) && error.response) {
           const status = error.response.status;
-          PhoneAlert(status);
+          throw new TokenError('Invalid Token', status);
         }
         throw error;
       });
@@ -109,10 +103,11 @@ class AuthRepository implements IAuthRepository {
         };
       }
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        Alert.alert('인증번호 입력시간을 초과 했습니다.');
+      if (axios.isAxiosError(error)) {
+        throw new TokenError('Invalid Token');
+      } else {
+        throw error;
       }
-      throw error;
     }
   }
 
@@ -133,27 +128,26 @@ class AuthRepository implements IAuthRepository {
           },
         },
       );
+      await saveToken('accessToken', res.data['accessToken']);
+      await saveToken('refreshToken', res.data['refreshToken']);
       return res.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        throw new Error(String(error.response?.status));
+        throw new TokenError('Invalid Token');
       } else {
         throw error;
       }
     }
   }
 
-  async verifyToken(refreshToken: string): Promise<NewToken> {
-    const res = await axios.patch(axiosSrc.token, { refreshToken });
-    if (res) {
-      return {
-        accessToken: res.data.accessToken,
-        refreshToken: res.data.refreshToken,
-      };
-    } else
-      return Promise.reject('Token is unusable').catch(function () {
-        throw new Error('Token Error');
-      });
+  async verifyToken(refreshToken: string): Promise<void> {
+    try {
+      const res = await axios.patch(axiosSrc.token, { refreshToken });
+      await saveToken('accessToken', res.data.accessToken);
+      await saveToken('refreshToken', res.data.refreshToken);
+    } catch (error) {
+      throw new TokenError('Invalid Token');
+    }
   }
 }
 

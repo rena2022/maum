@@ -1,9 +1,7 @@
-import { resetToken, saveToken } from '../../Utils/keychain';
 import {
   AuthPhone,
   Enroll,
   IAuthRepository,
-  NewToken,
   SignIn,
   SignUp,
 } from './AuthRepository';
@@ -27,14 +25,8 @@ class AuthRepository implements IAuthRepository {
     return { accessToken: '', refreshToken: '', message: '' };
   }
 
-  async verifyToken(
-    accessToken: string,
-    refreshToken: string,
-  ): Promise<NewToken> {
-    return {
-      accessToken: 'abc',
-      refreshToken: 'def',
-    };
+  async verifyToken(refreshToken: string) {
+    return;
   }
 }
 

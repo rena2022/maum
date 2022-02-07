@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Dimensions,
   Image,
@@ -10,7 +10,6 @@ import {
 import { RootStackParamList } from '../../App';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
-import { service } from '../Services/index';
 
 const { height } = Dimensions.get('window');
 

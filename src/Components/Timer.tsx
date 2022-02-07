@@ -9,7 +9,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { service } from '../Services/index';
-import { resetToken, saveToken } from '../Utils/keychain';
+import { saveToken } from '../Utils/keychain';
 import Typography from './Typography';
 
 interface TimerProps {
@@ -36,7 +36,6 @@ const Timer: React.FC<TimerProps> = props => {
       const phoneNumber = reduxState.phoneNum.phoneNumber;
       const data = await service.auth.verifyPhoneNum(nationalCode, phoneNumber);
       // 인증코드 수정
-      await resetToken('authToken');
       await saveToken('authToken', data['authToken']);
       props.setValidAuthCode(data.authCode);
       setCount(3);

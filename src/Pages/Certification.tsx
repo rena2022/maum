@@ -2,15 +2,15 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSelector } from 'react-redux';
 import { RootStackParamList } from '../../App';
 import PinInput from '../Components/PinInput';
 import RoundBtn from '../Components/RoundBtn';
 import Timer from '../Components/Timer';
 import Typography from '../Components/Typography';
-import { RootState } from '../redux/store';
 import { service } from '../Services/index';
-import { getToken, resetToken, saveToken } from '../Utils/keychain';
+import { getToken } from '../Utils/keychain';
+import { checkPermissions } from '../Utils/permissionCheck';
+import TokenError from '../Utils/TokenError';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Certification'>;
 
@@ -37,6 +37,13 @@ const Certification = ({ navigation, route }: Props) => {
           // 유저 아이디 요청 필요.
           /** @description User"Mock"Reopsitory */
           const userData = await service.user.getUserInfo('777');
+          const checkPermissionResult = await checkPermissions();
+          // userData dispatch 필요.
+          if (checkPermissionResult) {
+            navigation.reset({
+              routes: [{ name: 'Permission' }],
+            });
+          }
           navigation.reset({
             routes: [{ name: 'Home', params: { userData } }],
           });
@@ -45,7 +52,11 @@ const Certification = ({ navigation, route }: Props) => {
         Alert.alert('올바른 인증번호를 입력해주세요.');
       }
     } catch (error) {
-      console.info(error);
+      if (error instanceof TokenError) {
+        Alert.alert('인증번호 입력시간을 초과 했습니다.');
+      } else {
+        console.error(error);
+      }
     }
   }
 

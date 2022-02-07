@@ -8,13 +8,14 @@ import {
   Text,
   View,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { RootStackParamList } from '../../App';
 import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
-import { service } from '../Services/index';
-import { resetToken, saveToken } from '../Utils/keychain';
 import { setUser } from '../redux/modules/userInfo';
+import { service } from '../Services/index';
+import { checkPermissions } from '../Utils/permissionCheck';
+import TokenError from '../Utils/TokenError';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Language'>;
 const Language = ({ navigation, route }: Props) => {
@@ -99,27 +100,32 @@ const Language = ({ navigation, route }: Props) => {
         onPress={async () => {
           try {
             const data = await service.auth.enrollUser(phoneNum, getLang());
+            // getUserInfo(data.accessToken);
             const userInfo = await service.user.getUserInfo('123');
             dispatch(setUser(userInfo.nickName, userInfo.profileImg));
-
-            await resetToken('accessToken');
-            await saveToken('accessToken', data['accessToken']);
-
-            await resetToken('refreshToken');
-            await saveToken('refreshToken', data['refreshToken']);
-
-            navigation.reset({ routes: [{ name: 'Permission' }] });
-          } catch {
-            Alert.alert('입력시간을 초과 했습니다.\n다시 시도해주세요.', '', [
-              {
-                text: 'OK',
-                onPress: () => {
-                  setTimeout(() => {
-                    navigation.reset({ routes: [{ name: 'Onboarding' }] });
-                  }, 200);
+            const checkPermissionResult = await checkPermissions();
+            if (checkPermissionResult) {
+              navigation.reset({
+                routes: [{ name: 'Home' }],
+              });
+            } else {
+              navigation.reset({ routes: [{ name: 'Permission' }] });
+            }
+          } catch (error) {
+            if (error instanceof TokenError) {
+              Alert.alert('입력시간을 초과 했습니다.\n다시 시도해주세요.', '', [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    setTimeout(() => {
+                      navigation.reset({ routes: [{ name: 'Onboarding' }] });
+                    }, 200);
+                  },
                 },
-              },
-            ]);
+              ]);
+            } else {
+              console.error(error);
+            }
           }
         }}
       />

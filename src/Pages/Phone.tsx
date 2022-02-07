@@ -8,8 +8,8 @@ import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 import { setPhoneNum } from '../redux/modules/phoneNumInfo';
 import { service } from '../Services/index';
-import { resetToken, saveToken } from '../Utils/keychain';
-import { networkCheck } from '../Utils/phoneAlert';
+import PhoneAlert from '../Utils/phoneAlert';
+import TokenError from '../Utils/TokenError';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
 
@@ -73,14 +73,16 @@ const Phone = ({ navigation }: Props) => {
             const data = await service.auth.verifyPhoneNum(nation, phoneNum);
             // 네트워크체크 위치 수정 필요
             // networkCheck();
-            await resetToken('authToken');
-            await saveToken('authToken', data['authToken']);
             navigation.navigate('Certification', {
               phoneNum: fullNum,
               authCode: data['authCode'],
             });
           } catch (error) {
-            console.info(error);
+            if (error instanceof TokenError && error.status) {
+              PhoneAlert(error.status);
+            } else {
+              console.error(error);
+            }
           }
         }}
         disabled={input == ''}
@@ -127,6 +129,3 @@ const styles = StyleSheet.create({
 });
 
 export default Phone;
-function dispatch(arg0: any) {
-  throw new Error('Function not implemented.');
-}
