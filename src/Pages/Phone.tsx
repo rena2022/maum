@@ -8,8 +8,8 @@ import RoundBtn from '../Components/RoundBtn';
 import Typography from '../Components/Typography';
 import { setPhoneNum } from '../redux/modules/phoneNumInfo';
 import { service } from '../Services/index';
-import { resetToken, saveToken } from '../Utils/keychain';
-import { networkCheck } from '../Utils/phoneAlert';
+import PhoneAlert from '../Utils/phoneAlert';
+import TokenError from '../Utils/TokenError';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
 
@@ -66,23 +66,23 @@ const Phone = ({ navigation }: Props) => {
           marginLeft: 180,
         }}
         onPress={async () => {
-          const phoneNum = input.replace(/[-._!\s]/g, '');
-          dispatch(setPhoneNum(nation, phoneNum));
-          const fullNum = '+' + nation + ' ' + phoneNum;
-
-          const data = await service.auth.verifyPhoneNum(nation, phoneNum);
-          // 네트워크체크
-          networkCheck();
-
-          // status 체크 - 통신 실패 시 data에 status를 number로 반환 함
-          // if(res == ok) + 인증번호 넘겨주기
-          if (data) {
-            await resetToken('authToken');
-            await saveToken('authToken', data['authToken']);
+          try {
+            const phoneNum = input.replace(/[-._!\s]/g, '');
+            dispatch(setPhoneNum(nation, phoneNum));
+            const fullNum = '+' + nation + ' ' + phoneNum;
+            const data = await service.auth.verifyPhoneNum(nation, phoneNum);
+            // 네트워크체크 위치 수정 필요
+            // networkCheck();
             navigation.navigate('Certification', {
               phoneNum: fullNum,
               authCode: data['authCode'],
             });
+          } catch (error) {
+            if (error instanceof TokenError && error.status) {
+              PhoneAlert(error.status);
+            } else {
+              console.error(error);
+            }
           }
         }}
         disabled={input == ''}
@@ -129,6 +129,3 @@ const styles = StyleSheet.create({
 });
 
 export default Phone;
-function dispatch(arg0: any) {
-  throw new Error('Function not implemented.');
-}

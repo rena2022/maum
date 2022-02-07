@@ -18,6 +18,7 @@ import { checkPermissions } from './src/Utils/permissionCheck';
 import { Provider as StoreProvider } from 'react-redux';
 import store from './src/redux/store';
 import { getToken, saveToken } from './src/Utils/keychain';
+import TokenError from './src/Utils/TokenError';
 export type RootStackParamList = {
   Onboarding: undefined;
   Phone: undefined;
@@ -47,37 +48,27 @@ const App = () => {
   useEffect(() => {
     async function checkUserInfo() {
       try {
-        // const accessToken = await getToken("accessToken");
-        // const refreshToken = await getToken("refreshToken");
         const accessToken = await getToken('accessToken');
         const refreshToken = await getToken('refreshToken');
-
         if (accessToken && refreshToken) {
-          const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-            await service.auth.verifyToken(refreshToken);
-
-          saveToken('accessToken', newAccessToken);
-          saveToken('refreshToken', newRefreshToken);
-
+          await service.auth.verifyToken(refreshToken);
           const checkPermissionResult = await checkPermissions();
           if (!checkPermissionResult) {
             setInitialRouteName('Permission');
           } else {
             setInitialRouteName('Home');
           }
-          // await resetToken('accessToken');
-          // await resetToken('refreshToken');
-          // await saveToken('accessToken', newAccessToken);
-          // await saveToken('refreshToken', newRefreshToken);
         } else {
           setInitialRouteName('Onboarding');
         }
       } catch (error) {
-        // 토큰 에러(서버 에러)
-        (function errorHandler() {
-          setInitialRouteName('Onboarding');
-          throw error;
-        })();
+        if (error instanceof TokenError) {
+          (function errorHandler() {
+            setInitialRouteName('Onboarding');
+          })();
+        } else {
+          console.error(error);
+        }
       }
     }
     checkUserInfo();
