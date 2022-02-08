@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RootStackParamList } from '../../App';
+import { i18n } from '../../i18n.cofig';
 import PinInput from '../Components/PinInput';
 import RoundButton from '../Components/RoundButton';
 import Timer from '../Components/Timer';
@@ -67,7 +68,7 @@ const Certification = ({ navigation, route }: Props) => {
   return (
     <SafeAreaView style={styles.flexAlign}>
       {/* 메인 */}
-      <Typography value="인증번호 입력" type="title" />
+      <Typography value="CERTIFICATION.title" type="title" />
       <Typography value={phoneNum} type="subTitle" />
       <Timer setValidAuthCode={setValidAuthCode} />
       <PinInput
@@ -78,10 +79,12 @@ const Certification = ({ navigation, route }: Props) => {
       {/* Bottom */}
       <View style={[{ justifyContent: 'space-around' }, styles.rowAlign]}>
         <View style={styles.spotlight}>
-          <Text style={styles.spotlightTxt}>인증 문자가 오지 않나요?</Text>
+          <Text style={styles.spotlightTxt}>
+            {i18n.t('CERTIFICATION.info')}
+          </Text>
         </View>
         <RoundButton
-          value="확인"
+          value="CERTIFICATION.nextBtn"
           disabled={!isFilled}
           isLoading={loading}
           onPress={handleAuthBtn}

@@ -89,7 +89,7 @@ const App = () => {
                 options={{
                   headerShown: true,
                   title: '1 / 3',
-                  headerBackTitle: t('backBtnText'),
+                  headerBackTitle: t('NAVIGATION.back'),
                 }}
               />
               <RootStack.Screen
@@ -97,7 +97,7 @@ const App = () => {
                 options={{
                   headerShown: true,
                   title: '1 / 3',
-                  headerBackTitle: t('backBtnText'),
+                  headerBackTitle: t('back'),
                 }}>
                 {props => <Certification {...props} />}
               </RootStack.Screen>

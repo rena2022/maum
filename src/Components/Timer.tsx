@@ -66,7 +66,10 @@ const Timer: React.FC<TimerProps> = props => {
   if (count <= 0) {
     return (
       <Pressable onPress={handleResendText}>
-        <Typography value="인증 문자 다시 받기" textStyle={styles.mmsStyle} />
+        <Typography
+          value="CERTIFICATION.againBtn"
+          textStyle={styles.mmsStyle}
+        />
       </Pressable>
     );
   } else {

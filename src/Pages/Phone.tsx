@@ -10,6 +10,8 @@ import { setPhoneNum } from '../redux/modules/phoneNumInfo';
 import { service } from '../Services/index';
 import PhoneAlert from '../Utils/phoneAlert';
 import TokenError from '../Utils/TokenError';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../i18n.cofig';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
 const Phone = ({ navigation }: Props) => {
@@ -26,16 +28,15 @@ const Phone = ({ navigation }: Props) => {
     <SafeAreaView style={styles.flexAlign}>
       <View style={{ alignItems: 'center' }}>
         <Image
-          source={require('../Assets/Authorise/lock.png')}
+          source={require('../Assets/Images/Authorise/lock.png')}
           style={styles.imgStyle}
         />
-        <Typography value="전화번호 가입" type="title" />
-        <Typography value="안심하세요! 번호는 암호화되며," type="subTitle" />
-        <Typography value="절대 공개되지 않아요" type="subTitle" />
+        <Typography value="PHONE.title" type="title" />
+        <Typography value="PHONE.subTitle" type="subTitle" />
         <View style={[styles.tempStyle, { zIndex: 2 }]}>
           <DropDown getNation={getNation} />
           <TextInput
-            placeholder="전화번호"
+            placeholder={i18n.t('PHONE.phoneNumber')}
             keyboardType="numeric"
             autoFocus={true}
             style={styles.inputBox}
@@ -57,7 +58,7 @@ const Phone = ({ navigation }: Props) => {
       </View>
 
       <RoundButton
-        value="인증번호 받기"
+        value="PHONE.nextBtn"
         containerStyle={[styles.roundBtn, { opacity: input == '' ? 0.3 : 1 }]}
         disabled={input == ''}
         isLoading={loading}

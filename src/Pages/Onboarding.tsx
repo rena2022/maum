@@ -5,7 +5,7 @@ import {
   Image,
   SafeAreaView,
   StyleSheet,
-  View
+  View,
 } from 'react-native';
 import { RootStackParamList } from '../../App';
 import RoundButton from '../Components/RoundButton';
@@ -19,29 +19,27 @@ const Onboarding = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contents}>
-        <Image source={require('../Assets/Onboarding/sumHeart.png')} />
+        <Image source={require('../Assets/Images/Onboarding/sumHeart.png')} />
         <Typography
           type="title"
-          value="greetText"
+          value="ONBOARDING.greetText"
           textStyle={textStyle.greetText}
         />
         <Typography
           type="subTitle"
-          value={
-            '마음은 따뜻한 1:1 소셜 통화 앱이에요.\n지금 대화 친구를 만나세요!'
-          }
+          value={'ONBOARDING.explain'}
           textStyle={textStyle.introText}
         />
       </View>
       <View style={styles.footer}>
         <RoundButton
-          value="시작하기"
+          value="ONBOARDING.start"
           onPress={() => navigation.navigate('Phone')}
           containerStyle={styles.startBtn}
         />
         <Typography
           type="subTitle"
-          value="가입 시 이용약관 및 개인정보 취급방침에 동의하게 됩니다."
+          value="ONBOARDING.notice"
           textStyle={textStyle.noticeText}
         />
       </View>

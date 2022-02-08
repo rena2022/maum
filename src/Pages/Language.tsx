@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { RootStackParamList } from '../../App';
+import { i18n } from '../../i18n.cofig';
 import RoundButton from '../Components/RoundButton';
 import Typography from '../Components/Typography';
 import { setUser } from '../redux/modules/userInfo';
@@ -75,7 +76,7 @@ const Language = ({ navigation, route }: Props) => {
   return (
     <SafeAreaView style={styles.flexAlign}>
       <View style={{ alignItems: 'center', marginTop: 13 }}>
-        <Typography value="언어 선택" type="title" />
+        <Typography value="LANGUAGE.title" type="title" />
         <View
           style={{
             width: 351,
@@ -83,8 +84,7 @@ const Language = ({ navigation, route }: Props) => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <Typography value="가능한 언어를 모두 선택하세요" type="subTitle" />
-          <Typography value="선택한 언어의 친구와 연결돼요" type="subTitle" />
+          <Typography value="LANGUAGE.subTitle" type="subTitle" />
         </View>
       </View>
 
@@ -95,7 +95,7 @@ const Language = ({ navigation, route }: Props) => {
       </View>
 
       <RoundButton
-        value="다음"
+        value="LANGUAGE.nextBtn"
         containerStyle={[{ opacity: selectLang ? 1 : 0.3 }, styles.wrapBtn]}
         disabled={!selectLang}
         isLoading={loading}
@@ -116,7 +116,7 @@ const Language = ({ navigation, route }: Props) => {
             }
           } catch (error) {
             if (error instanceof TokenError) {
-              Alert.alert('입력시간을 초과 했습니다.\n다시 시도해주세요.', '', [
+              Alert.alert(i18n.t('LANGUAGE.timeOutAlert'), '', [
                 {
                   text: 'OK',
                   onPress: () => {

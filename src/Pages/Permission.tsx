@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import { RootStackParamList } from '../../App';
+import { i18n } from '../../i18n.cofig';
 import AuthContent from '../Components/AuthContent';
 import RoundButton from '../Components/RoundButton';
 import Typography from '../Components/Typography';
@@ -37,21 +38,18 @@ const Permission = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleWrap}>
-        <Typography
-          type="title"
-          value={'마지막! 꼭 필요한\n 권한을 허용해 주세요 😉'}
-        />
+        <Typography type="title" value={'PERMISSION.title'} />
       </View>
       <View>
         <AuthContent
           authImogeText="🎙"
-          authTitleText="마이크"
-          authDescriptionText="친구와 통화연결"
+          authTitleText={i18n.t('PERMISSION.mic.text')}
+          authDescriptionText={i18n.t('PERMISSION.mic.discription')}
         />
         <AuthContent
           authImogeText="📍"
-          authTitleText="위치 정보"
-          authDescriptionText="원하는 나라의 친구 매칭"
+          authTitleText={i18n.t('PERMISSION.location.text')}
+          authDescriptionText={i18n.t('PERMISSION.location.discription')}
         />
       </View>
       <View style={styles.footer}>

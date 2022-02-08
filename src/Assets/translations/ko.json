@@ -1,8 +1,61 @@
 [
   {
-    "__comment1__": "NAVIGATION",
-    "backBtnText": "이전",
-    "__comment2__": "ONBOARDING PAGE",
-    "greetText": "안녕하세요? 반가워요"
+    "NAVIGATION": { "back": "이전" },
+    "ONBOARDING": {
+      "greetText": "안녕하세요? 반가워요",
+      "explain": "마음은 따뜻한 1:1 소셜 통화 앱이에요.\n지금 대화 친구를 만나세요!",
+      "start": "시작하기",
+      "notice": "가입 시 이용약관 및 개인정보 취급방침에 동의하게 됩니다."
+    },
+    "PHONE": {
+      "title": "전화번호 가입",
+      "subTitle": "안심하세요! 번호는 암호화되며,\n절대 공개되지 않아요",
+      "phoneNumber": "전화번호",
+      "nextBtn": "인증번호 받기"
+    },
+    "CERTIFICATION": {
+      "title": "인증번호 입력",
+      "againBtn": "인증 문자 다시 받기",
+      "info": "인증 문자가 오지 않나요?",
+      "nextBtn": "확인"
+    },
+    "LANGUAGE": {
+      "title": "언어 선택",
+      "subTitle": "가능한 언어를 모두 선택하세요\n선택한 언어의 친구와 연결돼요",
+      "spotlight": "1순위, 가장 능숙해요",
+      "nextBtn": "다음",
+      "timeOutAlert": "입력시간을 초과 했습니다.\n다시 시도해주세요."
+    },
+    "PERMISSION": {
+      "title": "마지막! 꼭 필요한\n 권한을 허용해 주세요 😉",
+      "mic": {
+        "text": "마이크",
+        "discription": "친구와 통화 연결"
+      },
+      "location": {
+        "text": "위치 정보",
+        "discription": "원하는 나라의 친구 매칭"
+      },
+      "important": "필수",
+      "nextBtn": "확인"
+    },
+    "HOME": {
+      "callBtn": {
+        "friend": "대화친구",
+        "find": "찾기"
+      }
+    },
+    "CALL": {
+      "title": "대화 친구를 찾고 있어요"
+    },
+    "PHONEALERT": {
+      "network": {
+        "discription": "네트워크 연결을 다시 확인해주세요."
+      },
+      "error": {
+        "discription1": "전화번호를 정확히 입력해주세요.",
+        "discription2": "잠시 후 다시 시도해주세요."
+      }
+    }
   }
 ]
