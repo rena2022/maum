@@ -4,7 +4,7 @@ import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RootStackParamList } from '../../App';
 import PinInput from '../Components/PinInput';
-import RoundBtn from '../Components/RoundBtn';
+import RoundButton from '../Components/RoundButton';
 import Timer from '../Components/Timer';
 import Typography from '../Components/Typography';
 import { service } from '../Services/index';
@@ -19,9 +19,11 @@ const Certification = ({ navigation, route }: Props) => {
   const [isCorrect, setCorrect] = useState(false);
   const { phoneNum, authCode } = route.params;
   const [validAuthCode, setValidAuthCode] = useState(authCode);
+  const [loading, setLoading] = useState(false);
 
   async function handleAuthBtn() {
     try {
+      setLoading(true);
       const authToken = await getToken('authToken');
 
       if (isCorrect) {
@@ -57,6 +59,8 @@ const Certification = ({ navigation, route }: Props) => {
       } else {
         console.error(error);
       }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -76,9 +80,10 @@ const Certification = ({ navigation, route }: Props) => {
         <View style={styles.spotlight}>
           <Text style={styles.spotlightTxt}>인증 문자가 오지 않나요?</Text>
         </View>
-        <RoundBtn
+        <RoundButton
           value="확인"
           disabled={!isFilled}
+          isLoading={loading}
           onPress={handleAuthBtn}
           containerStyle={{ opacity: isFilled ? 1 : 0.3 }}
         />
