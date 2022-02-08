@@ -6,6 +6,7 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native';
+import LoadingButton from './LoadingButton';
 import Typography from './Typography';
 
 // 컴포넌트 사용 예시
@@ -17,23 +18,27 @@ interface RoudnBtnProps {
   containerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   disabled?: boolean;
+  isLoading?: boolean;
 }
 
-const RoundBtn: React.FC<RoudnBtnProps> = props => {
+const RoundButton: React.FC<RoudnBtnProps> = props => {
   const {
     value,
     onPress,
     containerStyle: containerStyle,
     textStyle,
     disabled = false,
+    isLoading = false,
   } = props;
-  return (
+  return !isLoading ? (
     <Pressable
       disabled={disabled}
       onPress={onPress}
       style={[styles.roundBtn, containerStyle, textStyle]}>
       <Typography value={value} textStyle={styles.roundBtnText} />
     </Pressable>
+  ) : (
+    <LoadingButton containerStyle={containerStyle} />
   );
 };
 
@@ -53,4 +58,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RoundBtn;
+export default RoundButton;

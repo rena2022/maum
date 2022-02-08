@@ -4,7 +4,7 @@ import { Image, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { RootStackParamList } from '../../App';
 import DropDown from '../Components/DropDown';
-import RoundBtn from '../Components/RoundBtn';
+import RoundButton from '../Components/RoundButton';
 import Typography from '../Components/Typography';
 import { setPhoneNum } from '../redux/modules/phoneNumInfo';
 import { service } from '../Services/index';
@@ -12,13 +12,12 @@ import PhoneAlert from '../Utils/phoneAlert';
 import TokenError from '../Utils/TokenError';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
-
 const Phone = ({ navigation }: Props) => {
   const [input, setInput] = useState('');
   const [isFocus, setFocus] = useState(false);
   const [nation, setNation] = useState(82);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-
   const getNation = (n: number) => {
     setNation(n);
   };
@@ -57,16 +56,14 @@ const Phone = ({ navigation }: Props) => {
         />
       </View>
 
-      <RoundBtn
+      <RoundButton
         value="인증번호 받기"
-        containerStyle={{
-          width: 182,
-          opacity: input == '' ? 0.3 : 1,
-          marginTop: 24,
-          marginLeft: 180,
-        }}
+        containerStyle={[styles.roundBtn, { opacity: input == '' ? 0.3 : 1 }]}
+        disabled={input == ''}
+        isLoading={loading}
         onPress={async () => {
           try {
+            setLoading(true);
             const phoneNum = input.replace(/[-._!\s]/g, '');
             dispatch(setPhoneNum(nation, phoneNum));
             const fullNum = '+' + nation + ' ' + phoneNum;
@@ -83,9 +80,10 @@ const Phone = ({ navigation }: Props) => {
             } else {
               console.error(error);
             }
+          } finally {
+            setLoading(false);
           }
         }}
-        disabled={input == ''}
       />
     </SafeAreaView>
   );
@@ -125,6 +123,13 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginRight: 30,
     alignItems: 'flex-end',
+  },
+
+  roundBtn: {
+    width: 182,
+    height: 60,
+    marginTop: 24,
+    marginLeft: 180,
   },
 });
 

@@ -33,7 +33,7 @@ const Home = ({ navigation }: Props) => {
       position => {
         const { latitude, longitude } = position.coords;
         Geocoder.from(latitude, longitude).then(json => {
-          const location = json.results[7].formatted_address;
+          const location = json.results[8].formatted_address;
           setLocation(location);
         });
       },
@@ -79,7 +79,7 @@ const Home = ({ navigation }: Props) => {
       </View>
       <LottieView
         style={styles.callBtn}
-        source={require('../Assets/Call/callBtn.json')}
+        source={require('../Assets/Home/callButton.json')}
         autoPlay
         loop
       />

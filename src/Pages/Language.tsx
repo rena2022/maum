@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { RootStackParamList } from '../../App';
-import RoundBtn from '../Components/RoundBtn';
+import RoundButton from '../Components/RoundButton';
 import Typography from '../Components/Typography';
 import { setUser } from '../redux/modules/userInfo';
 import { service } from '../Services/index';
@@ -22,6 +22,7 @@ const Language = ({ navigation, route }: Props) => {
   const phoneNum = route.params['phoneNum'].split(' ')[1];
   const [selectLang, setSelect] = useState(false);
   const [isPressed, setPressed] = useState([false, false, false]);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const changePressed = (lang: number) => {
@@ -93,12 +94,14 @@ const Language = ({ navigation, route }: Props) => {
         {MyPressable(2, '日本語')}
       </View>
 
-      <RoundBtn
+      <RoundButton
         value="다음"
         containerStyle={[{ opacity: selectLang ? 1 : 0.3 }, styles.wrapBtn]}
         disabled={!selectLang}
+        isLoading={loading}
         onPress={async () => {
           try {
+            setLoading(true);
             const data = await service.auth.enrollUser(phoneNum, getLang());
             // getUserInfo(data.accessToken);
             const userInfo = await service.user.getUserInfo('123');
@@ -126,6 +129,8 @@ const Language = ({ navigation, route }: Props) => {
             } else {
               console.error(error);
             }
+          } finally {
+            setLoading(false);
           }
         }}
       />

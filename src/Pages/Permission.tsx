@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { RootStackParamList } from '../../App';
 import AuthContent from '../Components/AuthContent';
-import RoundBtn from '../Components/RoundBtn';
+import RoundButton from '../Components/RoundButton';
 import Typography from '../Components/Typography';
 import { getLocationPermission } from '../Utils/locationPermission';
 import { checkMicPermission, getMicPermission } from '../Utils/micPermission';
@@ -55,7 +55,7 @@ const Permission = ({ navigation }: Props) => {
         />
       </View>
       <View style={styles.footer}>
-        <RoundBtn
+        <RoundButton
           value="확인"
           onPress={() => {
             handlePermission(navigation);

@@ -55,7 +55,7 @@ class AuthRepository implements IAuthRepository {
     phoneNumber: string,
   ): Promise<AuthPhone> {
     const data = axios
-      .get(axiosSrc.auth, {
+      .get<AuthPhone>(axiosSrc.auth, {
         params: {
           nationalCode,
           phoneNumber,
