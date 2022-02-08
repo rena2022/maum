@@ -18,19 +18,19 @@ const Calling = () => {
         <View style={styles.maskBox}>
           <Image
             style={styles.masklayout1}
-            source={require('../Assets/Call/callMaskLayout1.png')}
+            source={require('../Assets/Images/Call/callMaskLayout1.png')}
           />
           <Image
             style={styles.maskLayout2}
-            source={require('../Assets/Call/callMaskLayout2.png')}
+            source={require('../Assets/Images/Call/callMaskLayout2.png')}
           />
           <Image
             style={styles.maskLayout3}
-            source={require('../Assets/Call/callMaskLayout3.png')}
+            source={require('../Assets/Images/Call/callMaskLayout3.png')}
           />
           <Image
             style={styles.callMask}
-            source={require('../Assets/Call/callMask.png')}
+            source={require('../Assets/Images/Call/callMask.png')}
           />
         </View>
         <View style={styles.infoWrap}>
