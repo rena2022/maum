@@ -5,10 +5,10 @@ import {
   Image,
   SafeAreaView,
   StyleSheet,
-  View,
+  View
 } from 'react-native';
 import { RootStackParamList } from '../../App';
-import RoundBtn from '../Components/RoundBtn';
+import RoundButton from '../Components/RoundButton';
 import Typography from '../Components/Typography';
 
 const { height } = Dimensions.get('window');
@@ -34,7 +34,7 @@ const Onboarding = ({ navigation }: Props) => {
         />
       </View>
       <View style={styles.footer}>
-        <RoundBtn
+        <RoundButton
           value="시작하기"
           onPress={() => navigation.navigate('Phone')}
           containerStyle={styles.startBtn}
