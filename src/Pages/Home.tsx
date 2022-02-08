@@ -50,12 +50,12 @@ const Home = ({ navigation }: Props) => {
         <View style={styles.maskBox}>
           <Image
             style={styles.mask}
-            source={require('../Assets/Home/userMask.png')}
+            source={require('../Assets/Images/Home/userMask.png')}
           />
           <Pressable>
             <Image
               style={styles.editBtn}
-              source={require('../Assets/Home/userProfileEditBtn.png')}
+              source={require('../Assets/Images/Home/userProfileEditBtn.png')}
             />
           </Pressable>
         </View>
@@ -79,13 +79,19 @@ const Home = ({ navigation }: Props) => {
       </View>
       <LottieView
         style={styles.callBtn}
-        source={require('../Assets/Home/callButton.json')}
+        source={require('../Assets/Lotties/callButton.json')}
         autoPlay
         loop
       />
       <View style={styles.callBtnTxt}>
-        <Typography value="대화친구" textStyle={textStyle.findBtnTextTop} />
-        <Typography value="찾기" textStyle={textStyle.findBtnTextBottom} />
+        <Typography
+          value="HOME.callBtn.friend"
+          textStyle={textStyle.findBtnTextTop}
+        />
+        <Typography
+          value="HOME.callBtn.find"
+          textStyle={textStyle.findBtnTextBottom}
+        />
       </View>
 
       {/* 로그아웃 */}

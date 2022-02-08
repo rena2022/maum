@@ -1,5 +1,5 @@
-import en from '../Assets/translations/en.json';
-import ko from '../Assets/translations/ko.json';
+import en from '../Assets/Translations/en.json';
+import ko from '../Assets/Translations/ko.json';
 
 const resources = {
   en: {

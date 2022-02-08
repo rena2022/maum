@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { i18n } from '../../i18n.cofig';
 import Typography from './Typography';
 
 interface AuthContentProps {
@@ -16,7 +17,7 @@ const AuthContent: React.FC<AuthContentProps> = props => {
       </View>
       <View style={styles.authDetailBack}>
         <Typography
-          value={`${props.authTitleText} (필수)`}
+          value={`${props.authTitleText} (${i18n.t('PERMISSION.important')})`}
           textStyle={textStyle.authTitleText}
         />
         <Typography
@@ -47,6 +48,7 @@ const textStyle = StyleSheet.create({
   authDescriptionText: {
     fontSize: 14,
     color: '#888888',
+    textAlign: 'left',
   },
 });
 

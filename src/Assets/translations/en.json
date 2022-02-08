@@ -1,8 +1,61 @@
 [
   {
-    "__comment1__": "NAVIGATION",
-    "backBtnText": "Back",
-    "__comment2__": "ONBOARDING PAGE",
-    "greetText": "Hello? Welcome"
+    "NAVIGATION": { "back": "Back" },
+    "ONBOARDING": {
+      "greetText": "Hello? Welcome",
+      "explain": "It's a warm 1:1 social call app.\n Meet your conversation friend now!",
+      "start": "START",
+      "notice": "When you sign up, you agree to the terms and conditions and personal information handling policies."
+    },
+    "PHONE": {
+      "title": "Phone Register",
+      "subTitle": "Don't worry! The number will\nbe encrypeted and it never be revealed!",
+      "phoneNumber": "Phone number",
+      "nextBtn": "GET CODE"
+    },
+    "CERTIFICATION": {
+      "title": "Input Your Code",
+      "againBtn": "Send again",
+      "info": "No message?",
+      "nextBtn": "OK"
+    },
+    "LANGUAGE": {
+      "title": "Select Language",
+      "subTitle": "Choose all the languages you can\nIt connects to the friend in the language you chose.",
+      "spotlight": "1st, Greatest",
+      "nextBtn": "NEXT",
+      "timeOutAlert": "Time out!\nPlease try again.."
+    },
+    "PERMISSION": {
+      "title": "Last! Please allow\nthe authority 😉",
+      "mic": {
+        "text": "Microphone",
+        "discription": "Connect with your friends"
+      },
+      "location": {
+        "text": "Location",
+        "discription": "Matching friends\nfrom the country you want."
+      },
+      "important": "compulsory",
+      "nextBtn": "OK"
+    },
+    "HOME": {
+      "callBtn": {
+        "friend": "Friend",
+        "find": "Find"
+      }
+    },
+    "CALL": {
+      "title": "Find your friends"
+    },
+    "PHONEALERT": {
+      "network": {
+        "discription": "Please check your network"
+      },
+      "error": {
+        "discription1": "Please enter the exact number.",
+        "discription2": "Please try again later."
+      }
+    }
   }
 ]

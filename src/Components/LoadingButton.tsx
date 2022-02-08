@@ -14,7 +14,7 @@ const LoadingButton: React.FC<LoadingBtnProps> = props => {
           backgroundColor: '#FF787E',
         }}
         autoSize={false}
-        source={require('../Assets/Phone/loadingButton.json')}
+        source={require('../Assets/Lotties/loadingButton.json')}
         autoPlay
         loop
       />
