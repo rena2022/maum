@@ -18,7 +18,7 @@ import { checkPermissions } from './src/Utils/permissionCheck';
 import { Provider as StoreProvider } from 'react-redux';
 import store from './src/redux/store';
 import { getToken, saveToken } from './src/Utils/keychain';
-import TokenError from './src/Utils/TokenError';
+import TokenError from './src/Utils/ClientError';
 export type RootStackParamList = {
   Onboarding: undefined;
   Phone: undefined;
@@ -97,7 +97,7 @@ const App = () => {
                 options={{
                   headerShown: true,
                   title: '1 / 3',
-                  headerBackTitle: t('back'),
+                  headerBackTitle: t('NAVIGATION.back'),
                 }}>
                 {props => <Certification {...props} />}
               </RootStack.Screen>
