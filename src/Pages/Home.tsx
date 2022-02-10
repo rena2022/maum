@@ -16,11 +16,6 @@ import SkeletonUI from './SkeletonUI';
 
 const { width, height } = Dimensions.get('window');
 
-interface ILocation {
-  latitude: number;
-  longitude: number;
-}
-
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const Home = ({ navigation }: Props) => {

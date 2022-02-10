@@ -1,14 +1,7 @@
-import React from 'react';
-import {
-  Image,
-  Pressable,
-  View,
-  StyleSheet,
-  SafeAreaView,
-  Dimensions,
-} from 'react-native';
-import Typography from '../Components/Typography';
 import LottieView from 'lottie-react-native';
+import React from 'react';
+import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import Typography from '../Components/Typography';
 const { width, height } = Dimensions.get('window');
 
 const SkeletonUI = () => {

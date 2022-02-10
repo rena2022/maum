@@ -5,7 +5,6 @@ import {
   PermissionStatus,
   requestMultiple,
 } from 'react-native-permissions';
-import { navigationProp } from '../Pages/Permission';
 import { getLocationPermission } from './locationPermission';
 
 const iosMicRationale: {
@@ -24,15 +23,16 @@ const iosMicRationale: {
   ],
 };
 
-export const getMicPermission = async (
-  checkResult: PermissionStatus,
-  navigation: navigationProp,
-) => {
+export const getMicPermission = async (checkResult: PermissionStatus) => {
   if (checkResult === 'denied') {
     const isMicGranted = await requestMicPermission();
     if (isMicGranted) {
       const device = Platform.OS;
-      getLocationPermission(device, navigation);
+      if (await getLocationPermission(device)) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
   if (checkResult === 'blocked') {

@@ -3,15 +3,14 @@ import React, { useState } from 'react';
 import { Image, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { RootStackParamList } from '../../App';
+import { i18n } from '../../i18n.cofig';
 import DropDown from '../Components/DropDown';
 import RoundButton from '../Components/RoundButton';
 import Typography from '../Components/Typography';
 import { setPhoneNum } from '../redux/modules/phoneNumInfo';
 import { service } from '../Services/index';
-import PhoneAlert from '../Utils/phoneAlert';
 import TokenError from '../Utils/ClientError';
-import { useTranslation } from 'react-i18next';
-import { i18n } from '../../i18n.cofig';
+import PhoneAlert from '../Utils/phoneAlert';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
 const Phone = ({ navigation }: Props) => {

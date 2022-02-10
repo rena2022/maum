@@ -26,13 +26,16 @@ export type navigationProp = NativeStackNavigationProp<
 >;
 
 const Permission = ({ navigation }: Props) => {
-  async function handlePermission(navigation: navigationProp) {
+  async function handlePermission() {
     const device = Platform.OS;
     const checkMicResult = await checkMicPermission();
     if (checkMicResult === 'granted') {
-      getLocationPermission(device, navigation);
+      (await getLocationPermission(device)) &&
+        navigation.reset({ routes: [{ name: 'Home' }] });
+    } else {
+      (await getMicPermission(checkMicResult)) &&
+        navigation.reset({ routes: [{ name: 'Home' }] });
     }
-    await getMicPermission(checkMicResult, navigation);
   }
 
   return (
@@ -56,7 +59,7 @@ const Permission = ({ navigation }: Props) => {
         <RoundButton
           value="확인"
           onPress={() => {
-            handlePermission(navigation);
+            handlePermission();
           }}
           containerStyle={styles.checkBtn}
         />

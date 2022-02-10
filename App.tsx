@@ -20,6 +20,7 @@ import store from './src/redux/store';
 import { getToken, saveToken } from './src/Utils/keychain';
 import TokenError from './src/Utils/ClientError';
 import { setUser } from './src/redux/modules/userInfo';
+import { IP } from './src/Constants/keys';
 export type RootStackParamList = {
   Onboarding: undefined;
   Phone: undefined;
@@ -56,7 +57,10 @@ const App = () => {
           const newAccessToken = await getToken('accessToken');
           const userInfo = await service.user.getUserInfo(newAccessToken!);
           store.dispatch(
-            setUser(userInfo.nickName, 'http://' + userInfo.image),
+            setUser(
+              userInfo.nickName,
+              userInfo.image.replace('localhost', `http://${IP}`),
+            ),
           );
 
           const checkPermissionResult = await checkPermissions();

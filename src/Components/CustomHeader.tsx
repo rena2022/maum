@@ -14,7 +14,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = props => {
         <View style={styles.backContainer}>
           <Pressable>
             <Image
-              source={require('../Assets/Authorise/BackBtn.png')}
+              source={require('../Assets/Images/Authorise/BackBtn.png')}
               style={styles.imgStyle}
             />
             <Typography

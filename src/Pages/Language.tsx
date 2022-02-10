@@ -18,6 +18,7 @@ import { service } from '../Services/index';
 import { getToken } from '../Utils/keychain';
 import { checkPermissions } from '../Utils/permissionCheck';
 import TokenError from '../Utils/ClientError';
+import { IP } from '../Constants/keys';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Language'>;
 const Language = ({ navigation, route }: Props) => {
@@ -103,16 +104,19 @@ const Language = ({ navigation, route }: Props) => {
         onPress={async () => {
           try {
             setLoading(true);
-            const enrollData = await service.auth.enrollUser(
-              phoneNum,
-              getLang(),
-            );
+            await service.auth.enrollUser(phoneNum, getLang());
             const accessToken = await getToken('accessToken');
-            
+
             const userInfo = await service.user.getUserInfo(accessToken!);
-            dispatch(setUser(userInfo.nickName, 'http://' + userInfo.image));
+            dispatch(
+              setUser(
+                userInfo.nickName,
+                userInfo.image.replace('localhost', `http://${IP}`),
+              ),
+            );
 
             const checkPermissionResult = await checkPermissions();
+            setLoading(false);
             if (checkPermissionResult) {
               navigation.reset({
                 routes: [{ name: 'Home' }],
@@ -121,6 +125,7 @@ const Language = ({ navigation, route }: Props) => {
               navigation.reset({ routes: [{ name: 'Permission' }] });
             }
           } catch (error) {
+            setLoading(false);
             if (error instanceof TokenError) {
               Alert.alert(i18n.t('LANGUAGE.timeOutAlert'), '', [
                 {
@@ -135,8 +140,6 @@ const Language = ({ navigation, route }: Props) => {
             } else {
               console.error(error);
             }
-          } finally {
-            setLoading(false);
           }
         }}
       />

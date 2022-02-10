@@ -14,20 +14,20 @@ const Call = () => {
       />
       <View style={styles.callFriendWrap}>
         <LottieView
-          source={require('../Assets/Call/callWave.json')}
+          source={require('../Assets/Lotties/callButton.json')}
           autoPlay
           loop
         />
         <View style={styles.callFriendBtnTextWrap}>
           <Image
-            source={require('../Assets/Call/questionMarkText.png')}
+            source={require('../Assets/Images/Call/questionMarkText.png')}
             style={styles.callBtnMark}
           />
         </View>
       </View>
       <Pressable style={styles.exitBtnWrap}>
         <Image
-          source={require('../Assets/exitDoorBtn.png')}
+          source={require('../Assets/Images/exitDoorBtn.png')}
           style={styles.exitBtn}
         />
       </Pressable>

@@ -1,7 +1,6 @@
 import { Alert, Linking, PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { checkMultiple, PERMISSIONS } from 'react-native-permissions';
-import { navigationProp } from '../Pages/Permission';
 
 export const checkGeoPermission = async () => {
   try {
@@ -17,27 +16,26 @@ export const checkGeoPermission = async () => {
   }
 };
 
-export const getLocationPermission = (
-  os: string,
-  navigation: navigationProp,
-) => {
-  if (os === 'ios')
-    Geolocation.requestAuthorization('always').then(result => {
-      if (result === 'granted') {
-        navigation.reset({ routes: [{ name: 'Home' }] });
-      }
-      goSetting(result);
-    });
-  else if (os === 'android') {
-    PermissionsAndroid.request(
+export const getLocationPermission = async (os: string) => {
+  if (os === 'ios') {
+    const requestResult = await Geolocation.requestAuthorization('always');
+    if (requestResult === 'granted') {
+      return true;
+    } else {
+      goSetting(requestResult);
+      return false;
+    }
+  } else if (os === 'android') {
+    const requestResult = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
       modalMsg[0],
-    ).then(result => {
-      if (result === 'granted') {
-        navigation.reset({ routes: [{ name: 'Home' }] });
-      }
-      goSetting(result);
-    });
+    );
+    if (requestResult === 'granted') {
+      return true;
+    } else {
+      goSetting(requestResult);
+      return false;
+    }
   }
 };
 
