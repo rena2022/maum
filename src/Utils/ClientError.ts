@@ -8,4 +8,6 @@ class TokenError extends Error {
   }
 }
 
+export class NotFoundError extends TokenError {}
+
 export default TokenError;

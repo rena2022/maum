@@ -9,7 +9,7 @@ import Typography from '../Components/Typography';
 import { setPhoneNum } from '../redux/modules/phoneNumInfo';
 import { service } from '../Services/index';
 import PhoneAlert from '../Utils/phoneAlert';
-import TokenError from '../Utils/TokenError';
+import TokenError from '../Utils/ClientError';
 import { useTranslation } from 'react-i18next';
 import { i18n } from '../../i18n.cofig';
 

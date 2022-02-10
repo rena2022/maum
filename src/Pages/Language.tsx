@@ -15,8 +15,9 @@ import RoundButton from '../Components/RoundButton';
 import Typography from '../Components/Typography';
 import { setUser } from '../redux/modules/userInfo';
 import { service } from '../Services/index';
+import { getToken } from '../Utils/keychain';
 import { checkPermissions } from '../Utils/permissionCheck';
-import TokenError from '../Utils/TokenError';
+import TokenError from '../Utils/ClientError';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Language'>;
 const Language = ({ navigation, route }: Props) => {
@@ -102,10 +103,15 @@ const Language = ({ navigation, route }: Props) => {
         onPress={async () => {
           try {
             setLoading(true);
-            const data = await service.auth.enrollUser(phoneNum, getLang());
-            // getUserInfo(data.accessToken);
-            const userInfo = await service.user.getUserInfo('123');
-            dispatch(setUser(userInfo.nickName, userInfo.profileImg));
+            const enrollData = await service.auth.enrollUser(
+              phoneNum,
+              getLang(),
+            );
+            const accessToken = await getToken('accessToken');
+            
+            const userInfo = await service.user.getUserInfo(accessToken!);
+            dispatch(setUser(userInfo.nickName, 'http://' + userInfo.image));
+
             const checkPermissionResult = await checkPermissions();
             if (checkPermissionResult) {
               navigation.reset({

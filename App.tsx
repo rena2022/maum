@@ -15,10 +15,11 @@ import { service } from './src/Services/index';
 import { checkPermissions } from './src/Utils/permissionCheck';
 
 // redux
-import { Provider as StoreProvider } from 'react-redux';
+import { Provider as StoreProvider, useDispatch } from 'react-redux';
 import store from './src/redux/store';
 import { getToken, saveToken } from './src/Utils/keychain';
-import TokenError from './src/Utils/TokenError';
+import TokenError from './src/Utils/ClientError';
+import { setUser } from './src/redux/modules/userInfo';
 export type RootStackParamList = {
   Onboarding: undefined;
   Phone: undefined;
@@ -52,6 +53,12 @@ const App = () => {
         const refreshToken = await getToken('refreshToken');
         if (accessToken && refreshToken) {
           await service.auth.verifyToken(refreshToken);
+          const newAccessToken = await getToken('accessToken');
+          const userInfo = await service.user.getUserInfo(newAccessToken!);
+          store.dispatch(
+            setUser(userInfo.nickName, 'http://' + userInfo.image),
+          );
+
           const checkPermissionResult = await checkPermissions();
           if (!checkPermissionResult) {
             setInitialRouteName('Permission');
@@ -97,7 +104,7 @@ const App = () => {
                 options={{
                   headerShown: true,
                   title: '1 / 3',
-                  headerBackTitle: t('back'),
+                  headerBackTitle: t('NAVIGATION.back'),
                 }}>
                 {props => <Certification {...props} />}
               </RootStack.Screen>

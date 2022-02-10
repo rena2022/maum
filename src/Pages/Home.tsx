@@ -42,15 +42,18 @@ const Home = ({ navigation }: Props) => {
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 1000 },
     );
-  }, []);
+  }, [location]);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileWrap}>
         <View style={styles.maskBox}>
+          <View style={styles.mask}></View>
           <Image
-            style={styles.mask}
-            source={require('../Assets/Images/Home/userMask.png')}
+            style={styles.pofileImg}
+            source={{
+              uri: reduxState.user.profile,
+            }}
           />
           <Pressable>
             <Image
@@ -78,7 +81,6 @@ const Home = ({ navigation }: Props) => {
         </View>
       </View>
       <LottieView
-        style={styles.callBtn}
         source={require('../Assets/Lotties/callButton.json')}
         autoPlay
         loop
@@ -149,6 +151,19 @@ const styles = StyleSheet.create({
   mask: {
     width: 64,
     height: 64,
+
+    borderRadius: 32,
+    borderColor: '#FFE600',
+    borderWidth: 6,
+    opacity: 0.7,
+  },
+  pofileImg: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    position: 'absolute',
+    top: 6,
+    left: 6,
   },
   editBtn: {
     position: 'absolute',
@@ -161,11 +176,8 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingBottom: 2,
   },
-  callBtn: {
-    flex: 1,
-    alignItems: 'center',
-  },
   callBtnTxt: {
+    alignItems: 'center',
     width: 120,
     height: 90,
     position: 'absolute',

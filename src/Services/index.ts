@@ -1,9 +1,9 @@
 import AuthService from './AuthService';
 import UserService from './UserService';
 import AuthRepository from '../Repositories/AuthRepository/AuthRepository';
-import UserMockRepository from '../Repositories/UserRepository/UserMockRepository';
+import UserRepository from '../Repositories/UserRepository/UserRepository';
 
 export const service = {
-  user: new UserService(new UserMockRepository()),
+  user: new UserService(new UserRepository()),
   auth: new AuthService(new AuthRepository()),
 };

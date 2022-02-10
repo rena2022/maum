@@ -1,17 +1,20 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootStackParamList } from '../../App';
 import { i18n } from '../../i18n.cofig';
 import PinInput from '../Components/PinInput';
 import RoundButton from '../Components/RoundButton';
 import Timer from '../Components/Timer';
 import Typography from '../Components/Typography';
+import { setUser } from '../redux/modules/userInfo';
 import { service } from '../Services/index';
 import { getToken } from '../Utils/keychain';
 import { checkPermissions } from '../Utils/permissionCheck';
-import TokenError from '../Utils/TokenError';
+import TokenError, { NotFoundError } from '../Utils/ClientError';
+import { RootState } from '../redux/store';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Certification'>;
 
@@ -21,7 +24,8 @@ const Certification = ({ navigation, route }: Props) => {
   const { phoneNum, authCode } = route.params;
   const [validAuthCode, setValidAuthCode] = useState(authCode);
   const [loading, setLoading] = useState(false);
-
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state: RootState) => state);
   async function handleAuthBtn() {
     try {
       setLoading(true);
@@ -37,28 +41,32 @@ const Certification = ({ navigation, route }: Props) => {
             routes: [{ name: 'Language', params: { phoneNum } }],
           });
         } else {
-          // 유저 아이디 요청 필요.
-          /** @description User"Mock"Reopsitory */
-          const userData = await service.user.getUserInfo('777');
+          const accessToken = await getToken('accessToken');
+          const userInfo = await service.user.getUserInfo(accessToken!);
+          dispatch(setUser(userInfo.nickName, 'http://' + userInfo.image));
+
           const checkPermissionResult = await checkPermissions();
-          // userData dispatch 필요.
-          if (checkPermissionResult) {
+
+          if (!checkPermissionResult) {
             navigation.reset({
               routes: [{ name: 'Permission' }],
             });
+          } else {
+            navigation.reset({
+              routes: [{ name: 'Home' }],
+            });
           }
-          navigation.reset({
-            routes: [{ name: 'Home', params: { userData } }],
-          });
         }
       } else {
         Alert.alert('올바른 인증번호를 입력해주세요.');
       }
     } catch (error) {
-      if (error instanceof TokenError) {
+      if (error instanceof NotFoundError) {
+        Alert.alert('페이지를 찾을 수 없습니다.');
+      } else if (error instanceof TokenError) {
         Alert.alert('인증번호 입력시간을 초과 했습니다.');
       } else {
-        console.error(error);
+        Alert.alert('잠시 후 다시 시도해주세요.');
       }
     } finally {
       setLoading(false);

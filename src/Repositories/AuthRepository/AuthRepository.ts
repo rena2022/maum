@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { axiosSrc } from '../../Constants/axiosSrc';
 import { getToken, saveToken } from '../../Utils/keychain';
-import TokenError from '../../Utils/TokenError';
+import TokenError from '../../Utils/ClientError';
 
 // verifyPhoneNum
 export interface AuthPhone {
@@ -39,6 +39,7 @@ export interface Enroll {
   accessToken: string;
   refreshToken: string;
   message: string;
+  isExist: boolean;
 }
 
 export interface IAuthRepository {
