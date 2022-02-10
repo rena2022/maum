@@ -28,7 +28,11 @@ export const getMicPermission = async (checkResult: PermissionStatus) => {
     const isMicGranted = await requestMicPermission();
     if (isMicGranted) {
       const device = Platform.OS;
-      getLocationPermission(device);
+      if (await getLocationPermission(device)) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
   if (checkResult === 'blocked') {

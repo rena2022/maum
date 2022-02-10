@@ -32,8 +32,10 @@ const Permission = ({ navigation }: Props) => {
     if (checkMicResult === 'granted') {
       (await getLocationPermission(device)) &&
         navigation.reset({ routes: [{ name: 'Home' }] });
+    } else {
+      (await getMicPermission(checkMicResult)) &&
+        navigation.reset({ routes: [{ name: 'Home' }] });
     }
-    await getMicPermission(checkMicResult);
   }
 
   return (

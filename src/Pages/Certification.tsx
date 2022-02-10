@@ -9,6 +9,7 @@ import PinInput from '../Components/PinInput';
 import RoundButton from '../Components/RoundButton';
 import Timer from '../Components/Timer';
 import Typography from '../Components/Typography';
+import { IP } from '../Constants/keys';
 import { setUser } from '../redux/modules/userInfo';
 import { RootState } from '../redux/store';
 import { service } from '../Services/index';
@@ -44,7 +45,12 @@ const Certification = ({ navigation, route }: Props) => {
         } else {
           const accessToken = await getToken('accessToken');
           const userInfo = await service.user.getUserInfo(accessToken!);
-          dispatch(setUser(userInfo.nickName, 'http://' + userInfo.image));
+          dispatch(
+            setUser(
+              userInfo.nickName,
+              userInfo.image.replace('localhost', `http://${IP}`),
+            ),
+          );
           const checkPermissionResult = await checkPermissions();
           setLoading(false);
           if (!checkPermissionResult) {

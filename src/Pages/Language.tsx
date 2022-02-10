@@ -18,6 +18,7 @@ import { service } from '../Services/index';
 import { getToken } from '../Utils/keychain';
 import { checkPermissions } from '../Utils/permissionCheck';
 import TokenError from '../Utils/ClientError';
+import { IP } from '../Constants/keys';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Language'>;
 const Language = ({ navigation, route }: Props) => {
@@ -107,7 +108,12 @@ const Language = ({ navigation, route }: Props) => {
             const accessToken = await getToken('accessToken');
 
             const userInfo = await service.user.getUserInfo(accessToken!);
-            dispatch(setUser(userInfo.nickName, 'http://' + userInfo.image));
+            dispatch(
+              setUser(
+                userInfo.nickName,
+                userInfo.image.replace('localhost', `http://${IP}`),
+              ),
+            );
 
             const checkPermissionResult = await checkPermissions();
             setLoading(false);
