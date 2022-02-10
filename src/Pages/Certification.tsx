@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,11 +10,11 @@ import RoundButton from '../Components/RoundButton';
 import Timer from '../Components/Timer';
 import Typography from '../Components/Typography';
 import { setUser } from '../redux/modules/userInfo';
+import { RootState } from '../redux/store';
 import { service } from '../Services/index';
+import TokenError, { NotFoundError } from '../Utils/ClientError';
 import { getToken } from '../Utils/keychain';
 import { checkPermissions } from '../Utils/permissionCheck';
-import TokenError, { NotFoundError } from '../Utils/ClientError';
-import { RootState } from '../redux/store';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Certification'>;
 
@@ -37,6 +37,7 @@ const Certification = ({ navigation, route }: Props) => {
           authToken!,
         );
         if (!res.isSignIn) {
+          setLoading(false);
           navigation.reset({
             routes: [{ name: 'Language', params: { phoneNum } }],
           });
@@ -44,9 +45,8 @@ const Certification = ({ navigation, route }: Props) => {
           const accessToken = await getToken('accessToken');
           const userInfo = await service.user.getUserInfo(accessToken!);
           dispatch(setUser(userInfo.nickName, 'http://' + userInfo.image));
-
           const checkPermissionResult = await checkPermissions();
-
+          setLoading(false);
           if (!checkPermissionResult) {
             navigation.reset({
               routes: [{ name: 'Permission' }],
@@ -68,7 +68,6 @@ const Certification = ({ navigation, route }: Props) => {
       } else {
         Alert.alert('잠시 후 다시 시도해주세요.');
       }
-    } finally {
       setLoading(false);
     }
   }
