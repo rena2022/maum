@@ -7,8 +7,8 @@ class UserService {
     this.userRepository = userRepository;
   }
 
-  async getUserInfo(userId: string) {
-    return await this.userRepository.getUserData(userId);
+  async getUserInfo(accessToken: string) {
+    return await this.userRepository.getUserInfo(accessToken);
   }
 }
 
