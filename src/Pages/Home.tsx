@@ -11,7 +11,8 @@ import { RootStackParamList } from '../../App';
 import Typography from '../Components/Typography';
 import { GOOGLE_MAPS_API_KEY } from '../Constants/keys';
 import { RootState } from '../redux/store';
-import { getToken, resetToken } from '../Utils/keychain';
+import { resetToken } from '../Utils/keychain';
+import SkeletonUI from './SkeletonUI';
 
 const { width, height } = Dimensions.get('window');
 
@@ -21,12 +22,14 @@ interface ILocation {
 }
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
+
 const Home = ({ navigation }: Props) => {
   Geocoder.init(GOOGLE_MAPS_API_KEY, {
     language: getLocales()[0].languageCode,
   });
   const reduxState = useSelector((state: RootState) => state);
   const [location, setLocation] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
@@ -35,6 +38,7 @@ const Home = ({ navigation }: Props) => {
         Geocoder.from(latitude, longitude).then(json => {
           const location = json.results[8].formatted_address;
           setLocation(location);
+          setLoading(true);
         });
       },
       error => {
@@ -44,7 +48,7 @@ const Home = ({ navigation }: Props) => {
     );
   }, [location]);
 
-  return (
+  return loading ? (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileWrap}>
         <View style={styles.maskBox}>
@@ -109,6 +113,8 @@ const Home = ({ navigation }: Props) => {
         />
       </View>
     </SafeAreaView>
+  ) : (
+    <SkeletonUI />
   );
 };
 
