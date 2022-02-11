@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LottieView from 'lottie-react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import Geolocation from 'react-native-geolocation-service';
@@ -12,6 +12,10 @@ import Typography from '../Components/Typography';
 import { GOOGLE_MAPS_API_KEY } from '../Constants/keys';
 import { RootState } from '../redux/store';
 import { resetToken } from '../Utils/keychain';
+import {
+  connectSocket,
+  disconnectSocket,
+} from '../Utils/Webrtc/socketConnection';
 import SkeletonUI from './SkeletonUI';
 
 const { width, height } = Dimensions.get('window');
@@ -25,6 +29,23 @@ const Home = ({ navigation }: Props) => {
   const reduxState = useSelector((state: RootState) => state);
   const [location, setLocation] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const socketRef = useRef<SocketIOClient.Socket>();
+
+  function handleConnection() {
+    socketRef.current = connectSocket(socketRef.current);
+    // event
+    socketRef.current.on(
+      'connection',
+      (roomInfo: { roomID: number; roomName: string }) => {
+        console.log(roomInfo);
+      },
+    );
+  }
+
+  function handleDisconnection() {
+    disconnectSocket(socketRef.current as SocketIOClient.Socket);
+  }
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
