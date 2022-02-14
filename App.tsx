@@ -11,6 +11,7 @@ import Language from './src/Pages/Language';
 import Onboarding from './src/Pages/Onboarding';
 import Permission from './src/Pages/Permission';
 import Phone from './src/Pages/Phone';
+import Call from './src/Pages/Call';
 import { service } from './src/Services/index';
 import { checkPermissions } from './src/Utils/permissionCheck';
 
@@ -28,6 +29,7 @@ export type RootStackParamList = {
   Language: { phoneNum: string };
   Permission: undefined;
   Home: undefined;
+  Call: undefined;
 };
 
 type InitialRouteName = 'Onboarding' | 'Permission' | 'Home';
@@ -123,6 +125,7 @@ const App = () => {
               />
               <RootStack.Screen name="Permission" component={Permission} />
               <RootStack.Screen name="Home" component={Home} />
+              <RootStack.Screen name="Call" component={Call} />
             </RootStack.Navigator>
           </NavigationContainer>
         )}

@@ -43,57 +43,68 @@ const Home = ({ navigation }: Props) => {
     );
   }, [location]);
 
-  return loading ? (
+  return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.profileWrap}>
-        <View style={styles.maskBox}>
-          <View style={styles.mask}></View>
-          <Image
-            style={styles.pofileImg}
-            source={{
-              uri: reduxState.user.profile,
-            }}
-          />
-          <Pressable>
+      {!loading ? (
+        <SkeletonUI />
+      ) : (
+        <View style={styles.profileWrap}>
+          <View style={styles.maskBox}>
+            <View style={styles.mask}></View>
             <Image
-              style={styles.editBtn}
-              source={require('../Assets/Images/Home/userProfileEditBtn.png')}
+              style={styles.pofileImg}
+              source={{
+                uri: reduxState.user.profile,
+              }}
             />
-          </Pressable>
-        </View>
-        <View style={styles.infoWrap}>
-          <Typography
-            value={reduxState.user.nickName}
-            textStyle={textStyle.nameInfoText}
-          />
-          <Typography
-            value={location}
-            type="subTitle"
-            textStyle={textStyle.detailInfoText}
-          />
+            <Pressable>
+              <Image
+                style={styles.editBtn}
+                source={require('../Assets/Images/Home/userProfileEditBtn.png')}
+              />
+            </Pressable>
+          </View>
+          <View style={styles.infoWrap}>
+            <Typography
+              value={reduxState.user.nickName}
+              textStyle={textStyle.nameInfoText}
+            />
+            <Typography
+              value={location}
+              type="subTitle"
+              textStyle={textStyle.detailInfoText}
+            />
 
+            <Typography
+              value="😍 12"
+              type="subTitle"
+              textStyle={textStyle.detailInfoText}
+            />
+          </View>
+        </View>
+      )}
+      <Pressable
+        style={styles.callBtnContainer}
+        disabled={!loading}
+        onPress={() => {
+          navigation.navigate('Call');
+        }}>
+        <LottieView
+          source={require('../Assets/Lotties/callButton.json')}
+          autoPlay
+          loop
+        />
+        <View style={styles.callBtnTxt}>
           <Typography
-            value="😍 12"
-            type="subTitle"
-            textStyle={textStyle.detailInfoText}
+            value="HOME.callBtn.friend"
+            textStyle={textStyle.findBtnTextTop}
+          />
+          <Typography
+            value="HOME.callBtn.find"
+            textStyle={textStyle.findBtnTextBottom}
           />
         </View>
-      </View>
-      <LottieView
-        source={require('../Assets/Lotties/callButton.json')}
-        autoPlay
-        loop
-      />
-      <View style={styles.callBtnTxt}>
-        <Typography
-          value="HOME.callBtn.friend"
-          textStyle={textStyle.findBtnTextTop}
-        />
-        <Typography
-          value="HOME.callBtn.find"
-          textStyle={textStyle.findBtnTextBottom}
-        />
-      </View>
+      </Pressable>
 
       {/* 로그아웃 */}
       <View style={styles.logOutContainer}>
@@ -108,8 +119,6 @@ const Home = ({ navigation }: Props) => {
         />
       </View>
     </SafeAreaView>
-  ) : (
-    <SkeletonUI />
   );
 };
 
@@ -177,13 +186,15 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingBottom: 2,
   },
+  callBtnContainer: {
+    flex: 7,
+  },
   callBtnTxt: {
-    alignItems: 'center',
-    width: 120,
-    height: 90,
-    position: 'absolute',
-    top: height / 2 - 45,
-    left: width / 2 - 60,
+    flex: 1,
+    justifyContent: 'center',
+    // position: 'absolute',
+    // top: height / 2 - 45,
+    // left: width / 2 - 60,
   },
   logOutContainer: {
     flex: 1,
