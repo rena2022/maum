@@ -7,16 +7,16 @@ import React, {
 } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { service } from '../Services/index';
-import { saveToken } from '../Utils/keychain';
-import Typography from './Typography';
+import { RootState } from '../../redux/store';
+import { service } from '../../Services/index';
+import { saveToken } from '../../Utils/keychain';
+import Typography from '../../Components/Typography';
 
 interface TimerProps {
   setValidAuthCode: Dispatch<SetStateAction<string>>;
 }
 
-const Timer: React.FC<TimerProps> = props => {
+const TimerDown: React.FC<TimerProps> = props => {
   const reduxState = useSelector((state: RootState) => state);
   const timerId = useRef<NodeJS.Timer | null>(null);
   const [count, setCount] = useState(3);
@@ -99,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Timer;
+export default TimerDown;

@@ -1,56 +1,21 @@
-import LottieView from 'lottie-react-native';
 import React from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
-import Typography from '../Components/Typography';
-const { width, height } = Dimensions.get('window');
+import { StyleSheet, View } from 'react-native';
 
 const SkeletonUI = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.profileWrap}>
-        <View style={styles.mask}></View>
+    <View style={styles.profileWrap}>
+      <View style={styles.mask}></View>
 
-        <View style={styles.infoWrap}>
-          <View style={styles.nameWrap} />
-          <View style={styles.locationWarp} />
-          <View style={styles.likeWarp} />
-        </View>
+      <View style={styles.infoWrap}>
+        <View style={styles.nameWrap} />
+        <View style={styles.locationWarp} />
+        <View style={styles.likeWarp} />
       </View>
-      <LottieView
-        source={require('../Assets/Lotties/callButton.json')}
-        autoPlay
-        loop
-      />
-      <View style={styles.callBtnTxt}>
-        <Typography
-          value="HOME.callBtn.friend"
-          textStyle={textStyle.findBtnTextTop}
-        />
-        <Typography
-          value="HOME.callBtn.find"
-          textStyle={textStyle.findBtnTextBottom}
-        />
-      </View>
-    </SafeAreaView>
+    </View>
   );
 };
-const textStyle = StyleSheet.create({
-  findBtnTextTop: {
-    fontSize: 30,
-    color: '#ffffff',
-    fontWeight: '400',
-  },
-  findBtnTextBottom: {
-    fontSize: 64,
-    color: '#ffffff',
-    fontWeight: '400',
-  },
-});
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-  },
   profileWrap: {
     flexDirection: 'row',
     position: 'relative',
@@ -87,14 +52,6 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 40,
     backgroundColor: '#e9ecef',
-  },
-  callBtnTxt: {
-    alignItems: 'center',
-    width: 120,
-    height: 90,
-    position: 'absolute',
-    top: height / 2 - 45,
-    left: width / 2 - 60,
   },
 });
 
