@@ -30,6 +30,7 @@
     "react-native-permissions": "^3.2.0",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.1",
+    "react-native-webrtc": "^1.94.1",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
     "socket.io-client": "^2.4.0"
@@ -41,6 +42,7 @@
     "@types/jest": "^26.0.23",
     "@types/react": "^17.0.38",
     "@types/react-native": "^0.66.4",
+    "@types/react-native-webrtc": "^1.75.5",
     "@types/react-test-renderer": "^17.0.1",
     "@types/socket.io-client": "^1.4.36",
     "@typescript-eslint/eslint-plugin": "^5.8.1",

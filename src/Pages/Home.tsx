@@ -18,6 +18,11 @@ import {
 } from '../Utils/Webrtc/socketConnection';
 import SkeletonUI from './SkeletonUI';
 import { SocketError } from '../Utils/Webrtc/SocketError';
+import {
+  RTCPeerConnection,
+  mediaDevices,
+  MediaStream,
+} from 'react-native-webrtc';
 
 const { width, height } = Dimensions.get('window');
 
@@ -32,8 +37,24 @@ const Home = ({ navigation }: Props) => {
   const [loading, setLoading] = useState(false);
 
   const socketRef = useRef<SocketIOClient.Socket>();
+  const peerConnectionRef = useRef<RTCPeerConnection>();
+  // const sendChannelRef = useRef<void>();
+  const audioStream = useRef<MediaStream>();
+
+  async function getMedia() {
+    const sources = await mediaDevices.enumerateDevices();
+    console.log(sources);
+    const stream = await mediaDevices.getUserMedia({
+      audio: true,
+    });
+    if (stream) {
+      audioStream.current = stream;
+    }
+    console.log(audioStream.current);
+  }
 
   function handleConnection() {
+    getMedia();
     socketRef.current = connectSocket(socketRef.current);
     // event
     socketRef.current.on(
@@ -57,13 +78,55 @@ const Home = ({ navigation }: Props) => {
       console.log(`Client ${socketRef.current?.id} is joined Room 1`);
     });
 
-    socketRef.current.on('ready', (readyMsg: string) => {
+    socketRef.current.on('ready', async (readyMsg: string) => {
       console.log(`Client ${socketRef.current?.id} is ${readyMsg}`);
+      makeOffer();
     });
 
     socketRef.current.on('error', (error: SocketError) => {
       console.log(error);
     });
+
+    socketRef.current.on('offer', (offer: string) => {
+      console.log(offer);
+    });
+  }
+
+  function makeOffer() {
+    peerConnectionRef.current = configPeer();
+    // sendChannelRef.current =
+    //   peerConnectionRef.current.createDataChannel('sendDataChannel');
+  }
+
+  function configPeer() {
+    const configuration = {
+      iceServers: [{ url: 'stun:stun4.l.google.com:19302' }],
+    };
+    const peerConnection = new RTCPeerConnection(configuration);
+
+    peerConnection.addStream(audioStream.current!);
+
+    peerConnection.onnegotiationneeded = handleNegotiationEvent as any;
+    // peerConnection.onicecandidate = handleIceCandidateEvent;
+
+    return peerConnection;
+  }
+
+  async function handleNegotiationEvent() {
+    const offer = await peerConnectionRef.current?.createOffer();
+    await peerConnectionRef.current?.setLocalDescription(offer!);
+    socketRef.current?.emit('offer', {
+      accessToken: await getToken('accessToken'),
+      sdp: peerConnectionRef.current?.localDescription.sdp,
+      room: {
+        roomID: 1,
+        roomName: 'room',
+      },
+    });
+  }
+
+  function handleIceCandidateEvent(event: any) {
+    // local에서 동작하므로 생략
   }
 
   function handleDisconnection() {
