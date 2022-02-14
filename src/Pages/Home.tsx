@@ -11,12 +11,13 @@ import { RootStackParamList } from '../../App';
 import Typography from '../Components/Typography';
 import { GOOGLE_MAPS_API_KEY } from '../Constants/keys';
 import { RootState } from '../redux/store';
-import { resetToken } from '../Utils/keychain';
+import { getToken, resetToken } from '../Utils/keychain';
 import {
   connectSocket,
   disconnectSocket,
 } from '../Utils/Webrtc/socketConnection';
 import SkeletonUI from './SkeletonUI';
+import { SocketError } from '../Utils/Webrtc/SocketError';
 
 const { width, height } = Dimensions.get('window');
 
@@ -37,10 +38,32 @@ const Home = ({ navigation }: Props) => {
     // event
     socketRef.current.on(
       'connection',
-      (roomInfo: { roomID: number; roomName: string }) => {
-        console.log(roomInfo);
+      async (roomInfo: { roomID: number; roomName: string }) => {
+        console.log(
+          `Client ${socketRef.current?.id} is connected : ROOM INFO =>`,
+          roomInfo,
+        );
+        if (roomInfo) {
+          socketRef.current?.emit('join', {
+            accessToken: await getToken('accessToken'),
+            roomID: roomInfo.roomID,
+            roomName: roomInfo.roomName,
+          });
+        }
       },
     );
+
+    socketRef.current.on('joined', () => {
+      console.log(`Client ${socketRef.current?.id} is joined Room 1`);
+    });
+
+    socketRef.current.on('ready', (readyMsg: string) => {
+      console.log(`Client ${socketRef.current?.id} is ${readyMsg}`);
+    });
+
+    socketRef.current.on('error', (error: SocketError) => {
+      console.log(error);
+    });
   }
 
   function handleDisconnection() {

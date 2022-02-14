@@ -11,5 +11,5 @@ export function connectSocket(
 }
 
 export function disconnectSocket(socket: SocketIOClient.Socket) {
-  socket.close();
+  socket.disconnect();
 }
