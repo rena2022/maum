@@ -3,19 +3,19 @@ import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootStackParamList } from '../../App';
-import { i18n } from '../../i18n.cofig';
-import PinInput from '../Components/PinInput';
-import RoundButton from '../Components/RoundButton';
-import Timer from '../Components/Timer';
-import Typography from '../Components/Typography';
-import { IP } from '../Constants/keys';
-import { setUser } from '../redux/modules/userInfo';
-import { RootState } from '../redux/store';
-import { service } from '../Services/index';
-import TokenError, { NotFoundError } from '../Utils/ClientError';
-import { getToken } from '../Utils/keychain';
-import { checkPermissions } from '../Utils/permissionCheck';
+import { RootStackParamList } from '../../../App';
+import { i18n } from '../../../i18n.cofig';
+import RoundButton from '../../Components/RoundButton';
+import Typography from '../../Components/Typography';
+import { IP } from '../../Constants/keys';
+import { setUser } from '../../redux/modules/userInfo';
+import { RootState } from '../../redux/store';
+import { service } from '../../Services/index';
+import TokenError, { NotFoundError } from '../../Utils/ClientError';
+import { getToken } from '../../Utils/keychain';
+import { checkPermissions } from '../../Utils/permissionCheck';
+import PinInput from './PinInput';
+import TimerDown from './TimerDown';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Certification'>;
 
@@ -83,7 +83,7 @@ const Certification = ({ navigation, route }: Props) => {
       {/* 메인 */}
       <Typography value="CERTIFICATION.title" type="title" />
       <Typography value={phoneNum} type="subTitle" />
-      <Timer setValidAuthCode={setValidAuthCode} />
+      <TimerDown setValidAuthCode={setValidAuthCode} />
       <PinInput
         setFilled={setFilled}
         setCorrect={setCorrect}

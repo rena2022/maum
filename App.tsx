@@ -5,23 +5,22 @@ import {
 } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Certification from './src/Pages/Certification';
+import { Provider as StoreProvider } from 'react-redux';
+import { IP } from './src/Constants/keys';
+import Call from './src/Pages/Call';
+import Certification from './src/Pages/Certification/Certification';
 import Home from './src/Pages/Home';
 import Language from './src/Pages/Language';
 import Onboarding from './src/Pages/Onboarding';
 import Permission from './src/Pages/Permission';
 import Phone from './src/Pages/Phone';
-import Call from './src/Pages/Call';
+import { setUser } from './src/redux/modules/userInfo';
+import store from './src/redux/store';
 import { service } from './src/Services/index';
+import TokenError from './src/Utils/ClientError';
+import { getToken } from './src/Utils/keychain';
 import { checkPermissions } from './src/Utils/permissionCheck';
 
-// redux
-import { Provider as StoreProvider, useDispatch } from 'react-redux';
-import store from './src/redux/store';
-import { getToken, saveToken } from './src/Utils/keychain';
-import TokenError from './src/Utils/ClientError';
-import { setUser } from './src/redux/modules/userInfo';
-import { IP } from './src/Constants/keys';
 export type RootStackParamList = {
   Onboarding: undefined;
   Phone: undefined;
