@@ -22,6 +22,8 @@ import {
   RTCPeerConnection,
   mediaDevices,
   MediaStream,
+  RTCSessionDescription,
+  RTCSessionDescriptionType,
 } from 'react-native-webrtc';
 
 const { width, height } = Dimensions.get('window');
@@ -40,17 +42,16 @@ const Home = ({ navigation }: Props) => {
   const peerConnectionRef = useRef<RTCPeerConnection>();
   // const sendChannelRef = useRef<void>();
   const audioStream = useRef<MediaStream>();
+  const localUser = useRef<string>();
 
   async function getMedia() {
     const sources = await mediaDevices.enumerateDevices();
-    console.log(sources);
     const stream = await mediaDevices.getUserMedia({
       audio: true,
     });
     if (stream) {
       audioStream.current = stream;
     }
-    console.log(audioStream.current);
   }
 
   function handleConnection() {
@@ -80,6 +81,7 @@ const Home = ({ navigation }: Props) => {
 
     socketRef.current.on('ready', async (readyMsg: string) => {
       console.log(`Client ${socketRef.current?.id} is ${readyMsg}`);
+      localUser.current = "I'm offerer";
       makeOffer();
     });
 
@@ -87,9 +89,8 @@ const Home = ({ navigation }: Props) => {
       console.log(error);
     });
 
-    socketRef.current.on('offer', (offer: string) => {
-      console.log(offer);
-    });
+    socketRef.current.on('offer', handleIncomingOffer);
+    socketRef.current.on('answer', handleIncomingAnswer);
   }
 
   function makeOffer() {
@@ -113,16 +114,18 @@ const Home = ({ navigation }: Props) => {
   }
 
   async function handleNegotiationEvent() {
-    const offer = await peerConnectionRef.current?.createOffer();
-    await peerConnectionRef.current?.setLocalDescription(offer!);
-    socketRef.current?.emit('offer', {
-      accessToken: await getToken('accessToken'),
-      sdp: peerConnectionRef.current?.localDescription.sdp,
-      room: {
-        roomID: 1,
-        roomName: 'room',
-      },
-    });
+    if (peerConnectionRef.current && socketRef.current) {
+      const offer = await peerConnectionRef.current.createOffer();
+      await peerConnectionRef.current.setLocalDescription(offer);
+      socketRef.current.emit('offer', {
+        accessToken: await getToken('accessToken'),
+        sdp: peerConnectionRef.current.localDescription.sdp,
+        room: {
+          roomID: 1,
+          roomName: 'room',
+        },
+      });
+    }
   }
 
   function handleIceCandidateEvent(event: any) {
@@ -131,6 +134,45 @@ const Home = ({ navigation }: Props) => {
 
   function handleDisconnection() {
     disconnectSocket(socketRef.current as SocketIOClient.Socket);
+  }
+
+  async function handleIncomingOffer(sdp: string) {
+    if (!localUser.current) {
+      const configuration = {
+        iceServers: [{ url: 'stun:stun4.l.google.com:19302' }],
+      };
+      peerConnectionRef.current = new RTCPeerConnection(configuration);
+      // sendChannelRef.current = peerRef.current.createDataChannel('sendChannel', {
+      //   ordered: true,
+      // });
+      peerConnectionRef.current.onaddstream = gotRemoteStream;
+      const sdpType = { sdp, type: 'offer' } as RTCSessionDescriptionType;
+      const desc = new RTCSessionDescription(sdpType);
+      await peerConnectionRef.current.setRemoteDescription(desc);
+      const answer = await peerConnectionRef.current.createAnswer();
+      console.log(answer);
+      await peerConnectionRef.current.setLocalDescription(answer);
+      socketRef.current?.emit('answer', {
+        accessToken: await getToken('accessToken'),
+        sdp: peerConnectionRef.current.localDescription.sdp,
+        room: {
+          roomID: 1,
+          roomName: 'room',
+        },
+      });
+    }
+  }
+
+  async function handleIncomingAnswer(sdp: string) {
+    if (localUser.current) {
+      const sdpType = { sdp, type: 'answer' } as RTCSessionDescriptionType;
+      const desc = new RTCSessionDescription(sdpType);
+      await peerConnectionRef.current?.setRemoteDescription(desc);
+    }
+  }
+
+  function gotRemoteStream(event: any) {
+    console.log(event.stream);
   }
 
   useEffect(() => {
