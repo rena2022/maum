@@ -70,18 +70,18 @@ const Phone = ({ navigation }: Props) => {
             const data = await service.auth.verifyPhoneNum(nation, phoneNum);
             // 네트워크체크 위치 수정 필요
             // networkCheck();
+            setLoading(false);
             navigation.navigate('Certification', {
               phoneNum: fullNum,
               authCode: data['authCode'],
             });
           } catch (error) {
+            setLoading(false);
             if (error instanceof TokenError && error.status) {
               PhoneAlert(error.status);
             } else {
               console.error(error);
             }
-          } finally {
-            setLoading(false);
           }
         }}
       />
