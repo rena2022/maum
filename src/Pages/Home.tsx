@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LottieView from 'lottie-react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import Geolocation from 'react-native-geolocation-service';
@@ -11,7 +11,11 @@ import { RootStackParamList } from '../../App';
 import Typography from '../Components/Typography';
 import { GOOGLE_MAPS_API_KEY } from '../Constants/keys';
 import { RootState } from '../redux/store';
-import { resetToken } from '../Utils/keychain';
+import { getToken, resetToken } from '../Utils/keychain';
+import {
+  connectSocket,
+  disconnectSocket,
+} from '../Utils/Webrtc/socketConnection';
 import SkeletonUI from './SkeletonUI';
 
 const { width, height } = Dimensions.get('window');
