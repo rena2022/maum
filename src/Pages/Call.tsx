@@ -1,34 +1,32 @@
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LottieView from 'lottie-react-native';
 import React, { useEffect, useRef } from 'react';
 import { Dimensions, Image, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Typography from '../Components/Typography';
-import { SocketError } from '../Utils/Webrtc/SocketError';
 import {
-  RTCPeerConnection,
   mediaDevices,
-  MediaStream,
+  RTCPeerConnection,
   RTCSessionDescription,
-  RTCSessionDescriptionType,
 } from 'react-native-webrtc';
+import { RootStackParamList } from '../../App';
+import Typography from '../Components/Typography';
+import { getToken } from '../Utils/keychain';
 import {
   connectSocket,
   disconnectSocket,
 } from '../Utils/Webrtc/socketConnection';
-import { getToken } from '../Utils/keychain';
-import { RootStackParamList } from '../../App';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
+import { SocketError } from '../Utils/Webrtc/SocketError';
 
 const { width, height } = Dimensions.get('window');
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Call'>;
 
-const Call = () => {
+const Call = ({ route }: Props) => {
   const socketRef = useRef<SocketIOClient.Socket>();
-  const peerConnectionRef = useRef<RTCPeerConnection>();
-  // const sendChannelRef = useRef<void>();
-  const audioStream = useRef<MediaStream>();
+  const peerConnectionRef = useRef<any>();
+  const dataChannelRef = useRef<any>();
+  const audioStream = useRef<any>();
   const localUser = useRef<string>();
   const navigation = useNavigation<Props['navigation']>();
 
@@ -83,8 +81,22 @@ const Call = () => {
 
   function makeOffer() {
     peerConnectionRef.current = configPeer();
-    // sendChannelRef.current =
-    //   peerConnectionRef.current.createDataChannel('sendDataChannel');
+    // peerConnectionRef.current.onaddstream = gotRemoteStream;
+    dataChannelRef.current =
+      peerConnectionRef.current.createDataChannel('local-dataChannel');
+    dataChannelRef.current.onopen = startDataChannel;
+    dataChannelRef.current.send(userInfo());
+  }
+  function userInfo() {
+    const userInfo = route.params.userInfo;
+    return JSON.stringify(userInfo);
+  }
+
+  function startDataChannel() {
+    console.log('local to remote datachannel start');
+  }
+  function getDataChannel() {
+    console.log('get data channel');
   }
 
   function configPeer() {
@@ -93,8 +105,7 @@ const Call = () => {
     };
     const peerConnection = new RTCPeerConnection(configuration);
 
-    peerConnection.addStream(audioStream.current!);
-
+    // peerConnection.addStream(audioStream.current!);
     peerConnection.onnegotiationneeded = handleNegotiationEvent as any;
     // peerConnection.onicecandidate = handleIceCandidateEvent;
 
@@ -122,6 +133,7 @@ const Call = () => {
 
   async function handleIncomingOffer(sdp: string) {
     if (!localUser.current) {
+      console.log(socketRef.current?.id, localUser.current);
       const configuration = {
         iceServers: [{ url: 'stun:stun4.l.google.com:19302' }],
       };
@@ -129,8 +141,13 @@ const Call = () => {
       // sendChannelRef.current = peerRef.current.createDataChannel('sendChannel', {
       //   ordered: true,
       // });
-      peerConnectionRef.current.onaddstream = gotRemoteStream;
-      const sdpType = { sdp, type: 'offer' } as RTCSessionDescriptionType;
+      // peerConnectionRef.current.addStream(audioStream.current!);
+      // peerConnectionRef.current.onaddstream = gotRemoteStream;
+      peerConnectionRef.current.ondatachannel = getDataChannel;
+      dataChannelRef.current =
+        peerConnectionRef.current.createDataChannel('local-dataChannel');
+      dataChannelRef.current.onmessage = gotMessage;
+      const sdpType = { sdp, type: 'offer' };
       const desc = new RTCSessionDescription(sdpType);
       await peerConnectionRef.current.setRemoteDescription(desc);
       const answer = await peerConnectionRef.current.createAnswer();
@@ -148,14 +165,18 @@ const Call = () => {
 
   async function handleIncomingAnswer(sdp: string) {
     if (localUser.current) {
-      const sdpType = { sdp, type: 'answer' } as RTCSessionDescriptionType;
+      const sdpType = { sdp, type: 'answer' };
       const desc = new RTCSessionDescription(sdpType);
       await peerConnectionRef.current?.setRemoteDescription(desc);
     }
   }
 
   function gotRemoteStream(event: any) {
-    console.log(event.stream);
+    console.log(socketRef.current?.id, event.stream);
+  }
+
+  function gotMessage(event: any) {
+    console.log(socketRef.current?.id, event.data);
   }
 
   function handleDisconnection() {
