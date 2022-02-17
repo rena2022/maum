@@ -91,7 +91,9 @@ const Home = ({ navigation }: Props) => {
         style={styles.callBtnContainer}
         disabled={!loading}
         onPress={() => {
-          navigation.navigate('Call');
+          navigation.navigate('Call', {
+            userInfo: { ...reduxState.user, location },
+          });
         }}>
         <LottieView
           source={require('../Assets/Lotties/callButton.json')}

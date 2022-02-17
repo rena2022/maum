@@ -28,7 +28,7 @@ export type RootStackParamList = {
   Language: { phoneNum: string };
   Permission: undefined;
   Home: undefined;
-  Call: undefined;
+  Call: { userInfo: object };
 };
 
 type InitialRouteName = 'Onboarding' | 'Permission' | 'Home';
