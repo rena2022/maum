@@ -1,8 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LottieView from 'lottie-react-native';
-import React, { useEffect, useRef } from 'react';
-import { Dimensions, Image, Pressable, StyleSheet } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Dimensions,
+  EventEmitter,
+  Image,
+  Pressable,
+  StyleSheet,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   mediaDevices,
@@ -80,13 +86,51 @@ const Call = ({ route }: Props) => {
   }, []);
 
   function makeOffer() {
+    console.log(socketRef.current?.id, ' I will make offer');
+
     peerConnectionRef.current = configPeer();
+
     // peerConnectionRef.current.onaddstream = gotRemoteStream;
-    dataChannelRef.current =
-      peerConnectionRef.current.createDataChannel('local-dataChannel');
-    dataChannelRef.current.onopen = startDataChannel;
-    dataChannelRef.current.send(userInfo());
+
+    // dataChannelRef.current =
+    //   peerConnectionRef.current.createDataChannel('local-dataChannel');
+    // dataChannelRef.current.onopen = startDataChannel;
+    // dataChannelRef.current.send(userInfo());
+
+    peerConnectionRef.current.ondatachannel = handleChannelCallback;
+
+    dataChannelRef.current = peerConnectionRef.current.createDataChannel(
+      'local-dataChannel',
+      {},
+    );
+
+    dataChannelRef.current.onopen = handleDataChannelOpen;
+    dataChannelRef.current.onmessage = handleDataChannelMessageReceived;
+    dataChannelRef.current.onerror = handleDataChannelError;
+    dataChannelRef.current.onclose = handleDataChannelClose;
   }
+
+  const handleDataChannelOpen = function (event: any) {
+    dataChannelRef.current.send(userInfo());
+  };
+  const handleDataChannelMessageReceived = function (event: any) {
+    console.log('dataChannel.OnMessage:', event);
+  };
+  const handleDataChannelError = function (error: any) {
+    console.log('dataChannel.OnError:', error);
+  };
+  const handleDataChannelClose = function (event: any) {
+    console.log('dataChannel.OnClose', event);
+  };
+
+  const handleChannelCallback = function (event: any) {
+    dataChannelRef.current = event.channel;
+    dataChannelRef.current.onopen = handleDataChannelOpen;
+    dataChannelRef.current.onmessage = handleDataChannelMessageReceived;
+    dataChannelRef.current.onerror = handleDataChannelError;
+    dataChannelRef.current.onclose = handleDataChannelClose;
+  };
+
   function userInfo() {
     const userInfo = route.params.userInfo;
     return JSON.stringify(userInfo);
@@ -95,7 +139,8 @@ const Call = ({ route }: Props) => {
   function startDataChannel() {
     console.log('local to remote datachannel start');
   }
-  function getDataChannel() {
+
+  async function getDataChannel(event: any) {
     console.log('get data channel');
   }
 
@@ -133,7 +178,7 @@ const Call = ({ route }: Props) => {
 
   async function handleIncomingOffer(sdp: string) {
     if (!localUser.current) {
-      console.log(socketRef.current?.id, localUser.current);
+      console.log(socketRef.current?.id, 'I got offer');
       const configuration = {
         iceServers: [{ url: 'stun:stun4.l.google.com:19302' }],
       };
@@ -143,10 +188,11 @@ const Call = ({ route }: Props) => {
       // });
       // peerConnectionRef.current.addStream(audioStream.current!);
       // peerConnectionRef.current.onaddstream = gotRemoteStream;
-      peerConnectionRef.current.ondatachannel = getDataChannel;
       dataChannelRef.current =
         peerConnectionRef.current.createDataChannel('local-dataChannel');
       dataChannelRef.current.onmessage = gotMessage;
+
+      console.log(socketRef.current?.id, ' I will make answer');
       const sdpType = { sdp, type: 'offer' };
       const desc = new RTCSessionDescription(sdpType);
       await peerConnectionRef.current.setRemoteDescription(desc);
@@ -165,6 +211,8 @@ const Call = ({ route }: Props) => {
 
   async function handleIncomingAnswer(sdp: string) {
     if (localUser.current) {
+      console.log(socketRef.current?.id, 'I got answer');
+
       const sdpType = { sdp, type: 'answer' };
       const desc = new RTCSessionDescription(sdpType);
       await peerConnectionRef.current?.setRemoteDescription(desc);
@@ -176,7 +224,14 @@ const Call = ({ route }: Props) => {
   }
 
   function gotMessage(event: any) {
-    console.log(socketRef.current?.id, event.data);
+    console.log(
+      socketRef.current?.id,
+      'I got a message!! The message is',
+      event.data,
+    );
+    navigation.navigate('Calling', {
+      userInfo: event.data,
+    });
   }
 
   function handleDisconnection() {
