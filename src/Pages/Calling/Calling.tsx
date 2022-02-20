@@ -24,7 +24,6 @@ const Calling = ({ route }: Props) => {
     location: string;
   }
   let { userInfo }: UserInfo | any = route.params;
-  console.log('들어온 정보', userInfo);
   userInfo = JSON.parse(userInfo);
 
   return (
