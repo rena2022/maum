@@ -26,6 +26,8 @@ const Call = ({ route }: Props) => {
   const socketRef = useRef<SocketIOClient.Socket>();
   const peerConnectionRef = useRef<any>();
   const dataChannelRef = useRef<any>();
+  const remoteChannelRef = useRef<any>();
+
   const audioStream = useRef<any>();
   const localUser = useRef<string>();
   const navigation = useNavigation<Props['navigation']>();
@@ -80,23 +82,43 @@ const Call = ({ route }: Props) => {
   }, []);
 
   function makeOffer() {
+    console.log(socketRef.current?.id, ' I will make offer');
+
     peerConnectionRef.current = configPeer();
-    // peerConnectionRef.current.onaddstream = gotRemoteStream;
+
+    peerConnectionRef.current.onaddstream = gotRemoteStream;
+
+    peerConnectionRef.current.ondatachannel = handleChannelCallback;
     dataChannelRef.current =
       peerConnectionRef.current.createDataChannel('local-dataChannel');
-    dataChannelRef.current.onopen = startDataChannel;
-    dataChannelRef.current.send(userInfo());
+    dataChannelRef.current.onopen = handleDataChannelOpen;
+    dataChannelRef.current.onmessage = handleDataChannelMessageReceived;
+    dataChannelRef.current.onerror = handleDataChannelError;
   }
+
+  const handleDataChannelOpen = function (event: any) {
+    dataChannelRef.current.send(userInfo());
+  };
+  const handleDataChannelMessageReceived = function (event: any) {
+    peerConnectionRef.current.close();
+    navigation.navigate('Calling', {
+      userInfo: event.data,
+    });
+  };
+  const handleDataChannelError = function (error: any) {
+    console.log('dataChannel.OnError:', error);
+  };
+
+  const handleChannelCallback = function (event: any) {
+    dataChannelRef.current = event.channel;
+    dataChannelRef.current.onopen = handleDataChannelOpen;
+    dataChannelRef.current.onmessage = handleDataChannelMessageReceived;
+    dataChannelRef.current.onerror = handleDataChannelError;
+  };
+
   function userInfo() {
     const userInfo = route.params.userInfo;
     return JSON.stringify(userInfo);
-  }
-
-  function startDataChannel() {
-    console.log('local to remote datachannel start');
-  }
-  function getDataChannel() {
-    console.log('get data channel');
   }
 
   function configPeer() {
@@ -104,10 +126,9 @@ const Call = ({ route }: Props) => {
       iceServers: [{ url: 'stun:stun4.l.google.com:19302' }],
     };
     const peerConnection = new RTCPeerConnection(configuration);
-
-    // peerConnection.addStream(audioStream.current!);
+    peerConnection.addStream(audioStream.current!);
     peerConnection.onnegotiationneeded = handleNegotiationEvent as any;
-    // peerConnection.onicecandidate = handleIceCandidateEvent;
+    peerConnection.onicecandidate = handleIceCandidateEvent;
 
     return peerConnection;
   }
@@ -133,7 +154,7 @@ const Call = ({ route }: Props) => {
 
   async function handleIncomingOffer(sdp: string) {
     if (!localUser.current) {
-      console.log(socketRef.current?.id, localUser.current);
+      console.log(socketRef.current?.id, 'I got offer');
       const configuration = {
         iceServers: [{ url: 'stun:stun4.l.google.com:19302' }],
       };
@@ -141,17 +162,25 @@ const Call = ({ route }: Props) => {
       // sendChannelRef.current = peerRef.current.createDataChannel('sendChannel', {
       //   ordered: true,
       // });
-      // peerConnectionRef.current.addStream(audioStream.current!);
-      // peerConnectionRef.current.onaddstream = gotRemoteStream;
-      peerConnectionRef.current.ondatachannel = getDataChannel;
+      peerConnectionRef.current.addStream(audioStream.current!);
+      peerConnectionRef.current.onaddstream = gotRemoteStream;
       dataChannelRef.current =
         peerConnectionRef.current.createDataChannel('local-dataChannel');
-      dataChannelRef.current.onmessage = gotMessage;
+
+      console.log(socketRef.current?.id, ' I will make answer');
       const sdpType = { sdp, type: 'offer' };
       const desc = new RTCSessionDescription(sdpType);
       await peerConnectionRef.current.setRemoteDescription(desc);
       const answer = await peerConnectionRef.current.createAnswer();
       await peerConnectionRef.current.setLocalDescription(answer);
+
+      peerConnectionRef.current.ondatachannel = handleChannelCallback;
+      remoteChannelRef.current =
+        peerConnectionRef.current.createDataChannel('remote-dataChannel');
+      remoteChannelRef.current.onopen = handleDataChannelOpen;
+      remoteChannelRef.current.onmessage = handleDataChannelMessageReceived;
+      remoteChannelRef.current.onerror = handleDataChannelError;
+
       socketRef.current?.emit('answer', {
         accessToken: await getToken('accessToken'),
         sdp: peerConnectionRef.current.localDescription.sdp,
@@ -165,6 +194,8 @@ const Call = ({ route }: Props) => {
 
   async function handleIncomingAnswer(sdp: string) {
     if (localUser.current) {
+      console.log(socketRef.current?.id, 'I got answer');
+
       const sdpType = { sdp, type: 'answer' };
       const desc = new RTCSessionDescription(sdpType);
       await peerConnectionRef.current?.setRemoteDescription(desc);
@@ -173,10 +204,6 @@ const Call = ({ route }: Props) => {
 
   function gotRemoteStream(event: any) {
     console.log(socketRef.current?.id, event.stream);
-  }
-
-  function gotMessage(event: any) {
-    console.log(socketRef.current?.id, event.data);
   }
 
   function handleDisconnection() {

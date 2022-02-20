@@ -10,10 +10,22 @@ import {
 import Typography from '../../Components/Typography';
 import LottieView from 'lottie-react-native';
 import TimerUp from './TimerUp';
+import { RootStackParamList } from '../../../App';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 const { height, width } = Dimensions.get('window');
 
-const Calling = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Calling'>;
+
+const Calling = ({ route }: Props) => {
+  interface UserInfo {
+    nickName: string;
+    profile: string;
+    location: string;
+  }
+  let { userInfo }: UserInfo | any = route.params;
+  userInfo = JSON.parse(userInfo);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileWrap}>
@@ -25,16 +37,18 @@ const Calling = () => {
           />
           <Image
             style={styles.callMask}
-            source={require('../../Assets/Images/Call/callMask.png')}
+            source={{
+              uri: userInfo.profile,
+            }}
           />
         </View>
         <View style={styles.infoWrap}>
           <Typography
-            value="1호 고양이손님"
+            value={userInfo.nickName}
             textStyle={textStyle.nameInfoText}
           />
           <Typography
-            value="🇰🇷 대한민국, 부산광역시"
+            value={userInfo.location}
             type="subTitle"
             textStyle={textStyle.locationText}
           />
@@ -130,6 +144,7 @@ const styles = StyleSheet.create({
     height: 54,
     borderRadius: 27,
     position: 'absolute',
+    backgroundColor: '#F8BBD0',
   },
   infoWrap: {
     justifyContent: 'center',

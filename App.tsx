@@ -20,6 +20,7 @@ import { service } from './src/Services/index';
 import TokenError from './src/Utils/ClientError';
 import { getToken } from './src/Utils/keychain';
 import { checkPermissions } from './src/Utils/permissionCheck';
+import Calling from './src/Pages/Calling/Calling';
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -29,6 +30,7 @@ export type RootStackParamList = {
   Permission: undefined;
   Home: undefined;
   Call: { userInfo: object };
+  Calling: { userInfo: string };
 };
 
 type InitialRouteName = 'Onboarding' | 'Permission' | 'Home';
@@ -125,6 +127,7 @@ const App = () => {
               <RootStack.Screen name="Permission" component={Permission} />
               <RootStack.Screen name="Home" component={Home} />
               <RootStack.Screen name="Call" component={Call} />
+              <RootStack.Screen name="Calling" component={Calling} />
             </RootStack.Navigator>
           </NavigationContainer>
         )}
