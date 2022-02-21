@@ -1,30 +1,35 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import LottieView from 'lottie-react-native';
 import React from 'react';
 import {
-  SafeAreaView,
-  View,
+  Dimensions,
   Image,
   Pressable,
+  SafeAreaView,
   StyleSheet,
-  Dimensions,
+  View,
 } from 'react-native';
-import Typography from '../../Components/Typography';
-import LottieView from 'lottie-react-native';
-import TimerUp from './TimerUp';
 import { RootStackParamList } from '../../../App';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Typography from '../../Components/Typography';
+import TimerUp from './TimerUp';
 
 const { height, width } = Dimensions.get('window');
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Calling'>;
+interface UserInfo {
+  nickName: string;
+  profile: string;
+  location: string;
+}
 
 const Calling = ({ route }: Props) => {
-  interface UserInfo {
-    nickName: string;
-    profile: string;
-    location: string;
-  }
-  let { userInfo }: UserInfo | any = route.params;
+  // eslint-disable-next-line prefer-const
+  let { userInfo, socket }: UserInfo | any = route.params;
   userInfo = JSON.parse(userInfo);
+
+  function handleDisconnection() {
+    socket.emit('exit');
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -79,7 +84,7 @@ const Calling = ({ route }: Props) => {
           />
         </View>
       </View>
-      <Pressable style={styles.exitBtnWrap}>
+      <Pressable style={styles.exitBtnWrap} onPress={handleDisconnection}>
         <Image
           style={styles.exitBtn}
           source={require('../../Assets/Images/exitDoorBtn.png')}

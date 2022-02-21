@@ -25,11 +25,13 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Call'>;
 const Call = ({ route }: Props) => {
   const socketRef = useRef<SocketIOClient.Socket>();
   const peerConnectionRef = useRef<any>();
-  const dataChannelRef = useRef<any>();
+  const localChannelRef = useRef<any>();
+  const localReceiveChannelRef = useRef<any>();
   const remoteChannelRef = useRef<any>();
-
+  const remoteReceiveChannelRef = useRef<any>();
   const audioStream = useRef<any>();
   const localUser = useRef<string>();
+  const userInfoRef = useRef<string>();
   const navigation = useNavigation<Props['navigation']>();
 
   async function getMedia() {
@@ -79,41 +81,83 @@ const Call = ({ route }: Props) => {
 
     socketRef.current.on('offer', handleIncomingOffer);
     socketRef.current.on('answer', handleIncomingAnswer);
+    socketRef.current.on('connected', handleConnected);
+    socketRef.current.on('exit', handleExit);
   }, []);
+
+  function handleConnected() {
+    navigation.navigate('Calling', {
+      socket: socketRef.current as SocketIOClient.Socket,
+      userInfo: userInfoRef.current as string,
+    });
+  }
+
+  function handleExit() {
+    peerConnectionRef.current?.close();
+    localChannelRef?.current?.close();
+    remoteChannelRef?.current?.close();
+    socketRef.current?.emit('leave');
+    disconnectSocket(socketRef.current as SocketIOClient.Socket);
+    navigation.reset({ routes: [{ name: 'Home' }] });
+  }
 
   function makeOffer() {
     console.log(socketRef.current?.id, ' I will make offer');
 
     peerConnectionRef.current = configPeer();
-
     peerConnectionRef.current.onaddstream = gotRemoteStream;
-
-    peerConnectionRef.current.ondatachannel = handleChannelCallback;
-    dataChannelRef.current =
+    peerConnectionRef.current.ondatachannel = handleRemoteChannelCallback;
+    localChannelRef.current =
       peerConnectionRef.current.createDataChannel('local-dataChannel');
-    dataChannelRef.current.onopen = handleDataChannelOpen;
-    dataChannelRef.current.onmessage = handleDataChannelMessageReceived;
-    dataChannelRef.current.onerror = handleDataChannelError;
+    localChannelRef.current.onopen = handleLocalChannelOpen;
+    localChannelRef.current.onerror = handleLocalChannelError;
   }
 
-  const handleDataChannelOpen = function (event: any) {
-    dataChannelRef.current.send(userInfo());
-  };
-  const handleDataChannelMessageReceived = function (event: any) {
-    peerConnectionRef.current.close();
-    navigation.navigate('Calling', {
-      userInfo: event.data,
-    });
-  };
-  const handleDataChannelError = function (error: any) {
-    console.log('dataChannel.OnError:', error);
+  const handleLocalChannelOpen = function () {
+    localChannelRef.current.send(userInfo());
   };
 
-  const handleChannelCallback = function (event: any) {
-    dataChannelRef.current = event.channel;
-    dataChannelRef.current.onopen = handleDataChannelOpen;
-    dataChannelRef.current.onmessage = handleDataChannelMessageReceived;
-    dataChannelRef.current.onerror = handleDataChannelError;
+  const handleLocalReceiveChannelMessageReceived = function (event: any) {
+    console.log('local get message');
+    userInfoRef.current = event.data;
+    // navigation.navigate('Calling', {
+    //   socket: socketRef.current as SocketIOClient.Socket,
+    //   userInfo: userInfoRef.current as string,
+    // });
+    socketRef.current?.emit('connected');
+  };
+
+  const handleRemoteChannelOpen = function () {
+    remoteChannelRef.current.send(userInfo());
+  };
+
+  const handleRemoteReceiveChannelMessageReceived = function (event: any) {
+    console.log('remotes get message');
+    userInfoRef.current = event.data;
+    // navigation.navigate('Calling', {
+    //   socket: socketRef.current as SocketIOClient.Socket,
+    //   userInfo: userInfoRef.current as string,
+    // });
+  };
+
+  const handleLocalChannelError = function (error: any) {
+    console.log('LocalChannel.OnError:', error);
+  };
+
+  const handleRemoteChannelError = function (error: any) {
+    console.log('RemoteChannel.OnError:', error);
+  };
+
+  const handleRemoteChannelCallback = function (event: any) {
+    localReceiveChannelRef.current = event.channel;
+    localReceiveChannelRef.current.onmessage =
+      handleLocalReceiveChannelMessageReceived;
+  };
+
+  const handleLocalChannelCallback = function (event: any) {
+    remoteReceiveChannelRef.current = event.channel;
+    remoteReceiveChannelRef.current.onmessage =
+      handleRemoteReceiveChannelMessageReceived;
   };
 
   function userInfo() {
@@ -159,13 +203,8 @@ const Call = ({ route }: Props) => {
         iceServers: [{ url: 'stun:stun4.l.google.com:19302' }],
       };
       peerConnectionRef.current = new RTCPeerConnection(configuration);
-      // sendChannelRef.current = peerRef.current.createDataChannel('sendChannel', {
-      //   ordered: true,
-      // });
       peerConnectionRef.current.addStream(audioStream.current!);
       peerConnectionRef.current.onaddstream = gotRemoteStream;
-      dataChannelRef.current =
-        peerConnectionRef.current.createDataChannel('local-dataChannel');
 
       console.log(socketRef.current?.id, ' I will make answer');
       const sdpType = { sdp, type: 'offer' };
@@ -174,12 +213,11 @@ const Call = ({ route }: Props) => {
       const answer = await peerConnectionRef.current.createAnswer();
       await peerConnectionRef.current.setLocalDescription(answer);
 
-      peerConnectionRef.current.ondatachannel = handleChannelCallback;
+      peerConnectionRef.current.ondatachannel = handleLocalChannelCallback;
       remoteChannelRef.current =
         peerConnectionRef.current.createDataChannel('remote-dataChannel');
-      remoteChannelRef.current.onopen = handleDataChannelOpen;
-      remoteChannelRef.current.onmessage = handleDataChannelMessageReceived;
-      remoteChannelRef.current.onerror = handleDataChannelError;
+      remoteChannelRef.current.onopen = handleRemoteChannelOpen;
+      remoteChannelRef.current.onerror = handleRemoteChannelError;
 
       socketRef.current?.emit('answer', {
         accessToken: await getToken('accessToken'),

@@ -30,7 +30,7 @@ export type RootStackParamList = {
   Permission: undefined;
   Home: undefined;
   Call: { userInfo: object };
-  Calling: { userInfo: string };
+  Calling: { socket: SocketIOClient.Socket; userInfo: string };
 };
 
 type InitialRouteName = 'Onboarding' | 'Permission' | 'Home';
