@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { t } from 'i18next';
 import LottieView from 'lottie-react-native';
 import React, { useEffect, useRef } from 'react';
 import { Dimensions, Image, Pressable, StyleSheet } from 'react-native';
@@ -252,7 +253,7 @@ const Call = ({ route }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <Typography
-        value="대화 친구를 찾고 있어요"
+        value={t('CALL.title')}
         type="title"
         textStyle={textStyle.callingText}
       />
