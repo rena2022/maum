@@ -13,7 +13,11 @@ import { GOOGLE_MAPS_API_KEY } from '../Constants/keys';
 import { RootState } from '../redux/store';
 import { resetToken } from '../Utils/keychain';
 import SkeletonUI from './SkeletonUI';
+import { LogBox } from 'react-native';
 
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
 const { width, height } = Dimensions.get('window');
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
@@ -96,8 +100,13 @@ const Home = ({ navigation }: Props) => {
         style={styles.callBtnContainer}
         disabled={!loading}
         onPress={() => {
-          navigation.navigate('Call', {
-            userInfo: { ...reduxState.user, coordsLocation },
+          navigation.reset({
+            routes: [
+              {
+                name: 'Call',
+                params: { userInfo: { ...reduxState.user, coordsLocation } },
+              },
+            ],
           });
         }}>
         <LottieView
