@@ -17,10 +17,11 @@ import Phone from './src/Pages/Phone';
 import { setUser } from './src/redux/modules/userInfo';
 import store from './src/redux/store';
 import { service } from './src/Services/index';
-import TokenError from './src/Utils/ClientError';
+import TokenError from './src/Utils/AxiosError';
 import { getToken } from './src/Utils/keychain';
 import { checkPermissions } from './src/Utils/permissionCheck';
 import Calling from './src/Pages/Calling/Calling';
+import { networkCheck } from './src/Utils/phoneAlert';
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -82,6 +83,7 @@ const App = () => {
           })();
         } else {
           console.error(error);
+          net
         }
       }
     }

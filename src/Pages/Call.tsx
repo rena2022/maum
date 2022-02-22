@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { t } from 'i18next';
 import LottieView from 'lottie-react-native';
 import React, { useEffect, useRef } from 'react';
 import { Dimensions, Image, Pressable, StyleSheet } from 'react-native';
@@ -17,6 +18,11 @@ import {
   disconnectSocket,
 } from '../Utils/Webrtc/socketConnection';
 import { SocketError } from '../Utils/Webrtc/SocketError';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+  'Sending `peerConnectionOnRenegotiationNeeded` with no listeners registered.',
+]);
 
 const { width, height } = Dimensions.get('window');
 
@@ -86,9 +92,16 @@ const Call = ({ route }: Props) => {
   }, []);
 
   function handleConnected() {
-    navigation.navigate('Calling', {
-      socket: socketRef.current as SocketIOClient.Socket,
-      userInfo: userInfoRef.current as string,
+    navigation.reset({
+      routes: [
+        {
+          name: 'Calling',
+          params: {
+            socket: socketRef.current as SocketIOClient.Socket,
+            userInfo: userInfoRef.current as string,
+          },
+        },
+      ],
     });
   }
 
@@ -102,7 +115,7 @@ const Call = ({ route }: Props) => {
   }
 
   function makeOffer() {
-    console.log(socketRef.current?.id, ' I will make offer');
+    console.log(socketRef.current?.id, 'I will make offer');
 
     peerConnectionRef.current = configPeer();
     peerConnectionRef.current.onaddstream = gotRemoteStream;
@@ -120,10 +133,6 @@ const Call = ({ route }: Props) => {
   const handleLocalReceiveChannelMessageReceived = function (event: any) {
     console.log('local get message');
     userInfoRef.current = event.data;
-    // navigation.navigate('Calling', {
-    //   socket: socketRef.current as SocketIOClient.Socket,
-    //   userInfo: userInfoRef.current as string,
-    // });
     socketRef.current?.emit('connected');
   };
 
@@ -134,10 +143,6 @@ const Call = ({ route }: Props) => {
   const handleRemoteReceiveChannelMessageReceived = function (event: any) {
     console.log('remotes get message');
     userInfoRef.current = event.data;
-    // navigation.navigate('Calling', {
-    //   socket: socketRef.current as SocketIOClient.Socket,
-    //   userInfo: userInfoRef.current as string,
-    // });
   };
 
   const handleLocalChannelError = function (error: any) {
@@ -206,7 +211,7 @@ const Call = ({ route }: Props) => {
       peerConnectionRef.current.addStream(audioStream.current!);
       peerConnectionRef.current.onaddstream = gotRemoteStream;
 
-      console.log(socketRef.current?.id, ' I will make answer');
+      console.log(socketRef.current?.id, 'I will make answer');
       const sdpType = { sdp, type: 'offer' };
       const desc = new RTCSessionDescription(sdpType);
       await peerConnectionRef.current.setRemoteDescription(desc);
@@ -241,7 +246,7 @@ const Call = ({ route }: Props) => {
   }
 
   function gotRemoteStream(event: any) {
-    console.log(socketRef.current?.id, event.stream);
+    return;
   }
 
   function handleDisconnection() {
@@ -252,7 +257,7 @@ const Call = ({ route }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <Typography
-        value="대화 친구를 찾고 있어요"
+        value={t('CALL.title')}
         type="title"
         textStyle={textStyle.callingText}
       />

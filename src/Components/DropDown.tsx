@@ -34,11 +34,12 @@ const DropDown: React.FC<DropdownProps> = props => {
         width: 90,
         borderColor: '#00ff0000',
         marginLeft: 30,
+        paddingVertical: 10,
       }}
       textStyle={{
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: '500',
-        lineHeight: 18,
+        lineHeight: 20,
       }}
       containerStyle={{
         width: 95,

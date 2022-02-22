@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { t } from 'i18next';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,7 +12,7 @@ import { IP } from '../../Constants/keys';
 import { setUser } from '../../redux/modules/userInfo';
 import { RootState } from '../../redux/store';
 import { service } from '../../Services/index';
-import TokenError, { NotFoundError } from '../../Utils/ClientError';
+import TokenError, { NotFoundError, ServerError } from '../../Utils/AxiosError';
 import { getToken } from '../../Utils/keychain';
 import { checkPermissions } from '../../Utils/permissionCheck';
 import PinInput from './PinInput';
@@ -37,7 +38,7 @@ const Certification = ({ navigation, route }: Props) => {
           validAuthCode,
           authToken!,
         );
-        if (!res.isSignIn) {
+        if (!res.isExist) {
           setLoading(false);
           navigation.reset({
             routes: [{ name: 'Language', params: { phoneNum } }],
@@ -64,15 +65,20 @@ const Certification = ({ navigation, route }: Props) => {
           }
         }
       } else {
-        Alert.alert('올바른 인증번호를 입력해주세요.');
+        Alert.alert(t('CERTIFICATIONALERT.incorrect'));
+        setLoading(false);
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof NotFoundError) {
-        Alert.alert('페이지를 찾을 수 없습니다.');
+        Alert.alert(t('CERTIFICATIONALERT.error.page'));
+      } else if (error instanceof ServerError) {
+        Alert.alert(t('CERTIFICATIONALERT.error.authServer'));
       } else if (error instanceof TokenError) {
-        Alert.alert('인증번호 입력시간을 초과 했습니다.');
+        Alert.alert(t('CERTIFICATIONALERT.error.timeout'));
+      } else if (error.message == 'Network Error') {
+        Alert.alert(i18n.t('PHONEALERT.network.discription'));
       } else {
-        Alert.alert('잠시 후 다시 시도해주세요.');
+        Alert.alert(t('CERTIFICATIONALERT.erro.server'));
       }
       setLoading(false);
     }

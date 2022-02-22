@@ -46,7 +46,7 @@
       }
     },
     "CALL": {
-      "title": "Find your friends"
+      "title": "Looking for a friend to talk to."
     },
     "PHONEALERT": {
       "network": {
@@ -56,6 +56,19 @@
         "discription1": "Please enter the exact number.",
         "discription2": "Please try again later."
       }
+    },
+    "CERTIFICATIONALERT": {
+      "incorrect": "Please put in the correct code",
+      "error": {
+        "page": "Page not found",
+        "authServer": "The server is unstable.\nPlease try again later.",
+        "timeout": "The authentication number input time has exceeded.",
+        "server": "Please try again later."
+      }
+    },
+    "CALLING": {
+      "title": "First Card",
+      "discription": "Shall we find the intersection?"
     }
   }
 ]

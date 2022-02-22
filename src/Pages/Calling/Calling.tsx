@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LottieView from 'lottie-react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -9,8 +9,11 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import Geocoder from 'react-native-geocoding';
+import { getLocales } from 'react-native-localize';
 import { RootStackParamList } from '../../../App';
 import Typography from '../../Components/Typography';
+import { GOOGLE_MAPS_API_KEY } from '../../Constants/keys';
 import TimerUp from './TimerUp';
 
 const { height, width } = Dimensions.get('window');
@@ -23,6 +26,7 @@ interface UserInfo {
 }
 
 const Calling = ({ route }: Props) => {
+  const [transLocation, setLocation] = useState<string>();
   // eslint-disable-next-line prefer-const
   let { userInfo, socket }: UserInfo | any = route.params;
   userInfo = JSON.parse(userInfo);
@@ -30,6 +34,20 @@ const Calling = ({ route }: Props) => {
   function handleDisconnection() {
     socket.emit('exit');
   }
+
+  Geocoder.init(GOOGLE_MAPS_API_KEY, {
+    language: getLocales()[0].languageCode,
+  });
+
+  useEffect(() => {
+    Geocoder.from(
+      userInfo.coordsLocation.latitude,
+      userInfo.coordsLocation.longtitude,
+    ).then(json => {
+      const trans = json.results[8].formatted_address;
+      setLocation(trans);
+    });
+  }, [transLocation]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -53,7 +71,7 @@ const Calling = ({ route }: Props) => {
             textStyle={textStyle.nameInfoText}
           />
           <Typography
-            value={userInfo.location}
+            value={transLocation!}
             type="subTitle"
             textStyle={textStyle.locationText}
           />
@@ -75,11 +93,11 @@ const Calling = ({ route }: Props) => {
         />
         <View style={styles.topicContent}>
           <Typography
-            value="첫 대화 카드"
+            value="CALLING.title"
             textStyle={textStyle.topicCardText}
           />
           <Typography
-            value="서로의 교집합을 찾아 볼까요?"
+            value="CALLING.discription"
             textStyle={textStyle.topicThemeText}
           />
         </View>

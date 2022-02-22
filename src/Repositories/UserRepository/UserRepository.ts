@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { axiosSrc } from '../../Constants/axiosSrc';
-import { NotFoundError } from '../../Utils/ClientError';
-import TokenError from '../../Utils/ClientError';
+import TokenError, { NotFoundError } from '../../Utils/AxiosError';
 
 export interface User {
   nickName: string;

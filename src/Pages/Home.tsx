@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LottieView from 'lottie-react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import Geolocation from 'react-native-geolocation-service';
@@ -11,14 +11,15 @@ import { RootStackParamList } from '../../App';
 import Typography from '../Components/Typography';
 import { GOOGLE_MAPS_API_KEY } from '../Constants/keys';
 import { RootState } from '../redux/store';
-import { getToken, resetToken } from '../Utils/keychain';
-import {
-  connectSocket,
-  disconnectSocket,
-} from '../Utils/Webrtc/socketConnection';
+import { resetToken } from '../Utils/keychain';
 import SkeletonUI from './SkeletonUI';
+import { LogBox } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
+
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -28,17 +29,26 @@ const Home = ({ navigation }: Props) => {
   });
   const reduxState = useSelector((state: RootState) => state);
   const [location, setLocation] = useState('');
+  const [coordsLocation, setCoordsLocation] = useState<any>();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
       position => {
-        const { latitude, longitude } = position.coords;
-        Geocoder.from(latitude, longitude).then(json => {
-          const location = json.results[8].formatted_address;
-          setLocation(location);
-          setLoading(true);
-        });
+        const coordsLocation = {
+          latitude: position.coords.latitude,
+          longtitude: position.coords.longitude,
+        };
+
+        setCoordsLocation(coordsLocation);
+
+        Geocoder.from(coordsLocation.latitude, coordsLocation.longtitude).then(
+          json => {
+            const location = json.results[8].formatted_address;
+            setLocation(location);
+            setLoading(true);
+          },
+        );
       },
       error => {
         console.log(error.code, error.message);
@@ -91,14 +101,20 @@ const Home = ({ navigation }: Props) => {
         style={styles.callBtnContainer}
         disabled={!loading}
         onPress={() => {
-          navigation.navigate('Call', {
-            userInfo: { ...reduxState.user, location },
+          navigation.reset({
+            routes: [
+              {
+                name: 'Call',
+                params: { userInfo: { ...reduxState.user, coordsLocation } },
+              },
+            ],
           });
         }}>
         <LottieView
           source={require('../Assets/Lotties/callButton.json')}
           autoPlay
           loop
+          style={styles.ani}
         />
         <View style={styles.callBtnTxt}>
           <Typography
@@ -193,14 +209,17 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
   },
   callBtnContainer: {
-    flex: 7,
+    position: 'absolute',
+    top: height / 2 - width / 2,
+    zIndex: 3,
   },
   callBtnTxt: {
-    flex: 1,
-    justifyContent: 'center',
-    // position: 'absolute',
-    // top: height / 2 - 45,
-    // left: width / 2 - 60,
+    width: 118,
+    height: 97,
+    position: 'absolute',
+    left: width / 2 - 59,
+    top: width / 2 - 48.5,
+    zIndex: 2,
   },
   logOutContainer: {
     flex: 1,
@@ -214,5 +233,9 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: 'pink',
     borderRadius: 25,
+  },
+  ani: {
+    height: width,
+    zIndex: 1,
   },
 });
