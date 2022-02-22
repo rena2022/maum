@@ -46,7 +46,7 @@
       }
     },
     "CALL": {
-      "title": "Find your friends"
+      "title": "Looking for a friend to talk to."
     },
     "PHONEALERT": {
       "network": {
@@ -61,12 +61,10 @@
       "incorrect": "Please put in the correct code",
       "error": {
         "page": "Page not found",
+        "authServer": "The server is unstable.\nPlease try again later.",
         "timeout": "The authentication number input time has exceeded.",
         "server": "Please try again later."
       }
-    },
-    "CALL": {
-      "title": "Looking for a friend to talk to."
     },
     "CALLING": {
       "title": "First Card",

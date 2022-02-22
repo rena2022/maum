@@ -12,7 +12,7 @@ import { IP } from '../../Constants/keys';
 import { setUser } from '../../redux/modules/userInfo';
 import { RootState } from '../../redux/store';
 import { service } from '../../Services/index';
-import TokenError, { NotFoundError } from '../../Utils/ClientError';
+import TokenError, { NotFoundError, ServerError } from '../../Utils/AxiosError';
 import { getToken } from '../../Utils/keychain';
 import { checkPermissions } from '../../Utils/permissionCheck';
 import PinInput from './PinInput';
@@ -38,7 +38,7 @@ const Certification = ({ navigation, route }: Props) => {
           validAuthCode,
           authToken!,
         );
-        if (!res.isSignIn) {
+        if (!res.isExist) {
           setLoading(false);
           navigation.reset({
             routes: [{ name: 'Language', params: { phoneNum } }],
@@ -68,11 +68,15 @@ const Certification = ({ navigation, route }: Props) => {
         Alert.alert(t('CERTIFICATIONALERT.incorrect'));
         setLoading(false);
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof NotFoundError) {
         Alert.alert(t('CERTIFICATIONALERT.error.page'));
+      } else if (error instanceof ServerError) {
+        Alert.alert(t('CERTIFICATIONALERT.error.authServer'));
       } else if (error instanceof TokenError) {
         Alert.alert(t('CERTIFICATIONALERT.error.timeout'));
+      } else if (error.message == 'Network Error') {
+        Alert.alert(i18n.t('PHONEALERT.network.discription'));
       } else {
         Alert.alert(t('CERTIFICATIONALERT.erro.server'));
       }

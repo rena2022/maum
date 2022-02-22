@@ -17,7 +17,7 @@ import { setUser } from '../redux/modules/userInfo';
 import { service } from '../Services/index';
 import { getToken } from '../Utils/keychain';
 import { checkPermissions } from '../Utils/permissionCheck';
-import TokenError from '../Utils/ClientError';
+import TokenError from '../Utils/AxiosError';
 import { IP } from '../Constants/keys';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Language'>;
@@ -124,15 +124,17 @@ const Language = ({ navigation, route }: Props) => {
             } else {
               navigation.reset({ routes: [{ name: 'Permission' }] });
             }
-          } catch (error) {
+          } catch (error: any) {
             setLoading(false);
-            if (error instanceof TokenError) {
+            if (error.message == 'Network Error') {
+              Alert.alert(i18n.t('PHONEALERT.network.discription'));
+            } else if (error instanceof TokenError) {
               Alert.alert(i18n.t('LANGUAGE.timeOutAlert'), '', [
                 {
                   text: 'OK',
                   onPress: () => {
                     setTimeout(() => {
-                      navigation.reset({ routes: [{ name: 'Onboarding' }] });
+                      // navigation.reset({ routes: [{ name: 'Onboarding' }] });
                     }, 200);
                   },
                 },

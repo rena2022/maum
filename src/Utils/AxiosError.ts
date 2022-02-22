@@ -9,5 +9,6 @@ class TokenError extends Error {
 }
 
 export class NotFoundError extends TokenError {}
+export class ServerError extends TokenError {}
 
 export default TokenError;

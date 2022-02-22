@@ -1,7 +1,10 @@
 import axios, { AxiosError } from 'axios';
 import { axiosSrc } from '../../Constants/axiosSrc';
 import { getToken, saveToken } from '../../Utils/keychain';
-import TokenError from '../../Utils/ClientError';
+import TokenError from '../../Utils/AxiosError';
+import { ServerError } from '../../Utils/AxiosError';
+import { Alert } from 'react-native';
+import { i18n } from '../../../i18n.cofig';
 
 // verifyPhoneNum
 export interface AuthPhone {
@@ -26,6 +29,10 @@ interface NewUser {
 
 type UserIdentifier = OriginUser | NewUser;
 
+interface IsExist {
+  isExist: boolean;
+}
+
 interface SignIn {
   isSignIn: true;
 }
@@ -44,7 +51,7 @@ export interface Enroll {
 
 export interface IAuthRepository {
   verifyPhoneNum(nationalCode: number, phoneNumber: string): Promise<AuthPhone>;
-  checkUser(authCode: string, authToken: string): Promise<SignIn | SignUp>;
+  checkUser(authCode: string, authToken: string): Promise<IsExist>;
 
   enrollUser(phoneNumber: string, language: Array<number>): Promise<Enroll>;
   verifyToken(refreshToken: string): Promise<void>;
@@ -76,12 +83,9 @@ class AuthRepository implements IAuthRepository {
     return data;
   }
 
-  async checkUser(
-    authCode: string,
-    authToken: string,
-  ): Promise<SignUp | SignIn> {
-    try {
-      const res = await axios.post<UserIdentifier>(
+  async checkUser(authCode: string, authToken: string): Promise<IsExist> {
+    const res = await axios
+      .post<UserIdentifier>(
         axiosSrc.auth,
         {
           authCode,
@@ -89,33 +93,42 @@ class AuthRepository implements IAuthRepository {
         {
           headers: { Authorization: `Bearer ${authToken}` },
         },
-      );
-      const isSignIn = res.data.isExist;
-      if (!isSignIn) {
-        await saveToken('registerToken', res.data.registerToken);
-        return {
-          isSignIn,
-        };
-      } else {
-        await saveToken('accessToken', res.data.accessToken);
-        await saveToken('refreshToken', res.data.refreshToken);
-        return {
-          isSignIn,
-        };
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new TokenError('Invalid Token');
-      } else {
+      )
+      .then(async res => {
+        const isExist = res.data.isExist;
+        if (!isExist) {
+          await saveToken('registerToken', res.data.registerToken);
+          return {
+            isExist,
+          };
+        } else {
+          await saveToken('accessToken', res.data.accessToken);
+          await saveToken('refreshToken', res.data.refreshToken);
+          return {
+            isExist,
+          };
+        }
+      })
+      .catch((error: Error | AxiosError) => {
+        if (axios.isAxiosError(error) && error.response) {
+          const status = error.response.status;
+          if (status == 500) {
+            throw new ServerError('Server Eroor', status);
+          } else if (axios.isAxiosError(error)) {
+            throw new TokenError('Invalid Token');
+          } else {
+            throw error;
+          }
+        }
         throw error;
-      }
-    }
+      });
+    return res;
   }
 
   async enrollUser(
     phoneNumber: string,
     languages: Array<number>,
-  ): Promise<Enroll> {
+  ): Promise<Enroll | any> {
     try {
       const res = await axios.post(
         axiosSrc.user,
@@ -132,8 +145,10 @@ class AuthRepository implements IAuthRepository {
       await saveToken('accessToken', res.data['accessToken']);
       await saveToken('refreshToken', res.data['refreshToken']);
       return res.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
+    } catch (error: any) {
+      if (error.message == 'Network Error') {
+        throw error;
+      } else if (axios.isAxiosError(error)) {
         throw new TokenError('Invalid Token');
       } else {
         throw error;

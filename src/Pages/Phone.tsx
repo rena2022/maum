@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import {
+  Alert,
   Image,
   Keyboard,
   Platform,
@@ -18,7 +19,7 @@ import RoundButton from '../Components/RoundButton';
 import Typography from '../Components/Typography';
 import { setPhoneNum } from '../redux/modules/phoneNumInfo';
 import { service } from '../Services/index';
-import TokenError from '../Utils/ClientError';
+import TokenError from '../Utils/AxiosError';
 import PhoneAlert from '../Utils/phoneAlert';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Phone'>;
@@ -46,9 +47,11 @@ const Phone = ({ navigation }: Props) => {
         phoneNum: fullNum,
         authCode: data['authCode'],
       });
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false);
-      if (error instanceof TokenError && error.status) {
+      if (error.message == 'Network Error') {
+        Alert.alert(i18n.t('PHONEALERT.network.discription'));
+      } else if (error instanceof TokenError && error.status) {
         PhoneAlert(error.status);
       } else {
         console.error(error);
