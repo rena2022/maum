@@ -19,7 +19,7 @@ interface TimerProps {
 const TimerDown: React.FC<TimerProps> = props => {
   const reduxState = useSelector((state: RootState) => state);
   const timerId = useRef<NodeJS.Timer | null>(null);
-  const [count, setCount] = useState(3);
+  const [count, setCount] = useState(180);
 
   // 01, 02 등 두 자리 수 반환 함수
   function numberPad(n: number, width: number) {

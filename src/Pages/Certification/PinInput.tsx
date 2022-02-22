@@ -1,5 +1,10 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { KeycodeInput } from 'react-native-keycode';
 
 interface pinProps {
@@ -27,6 +32,7 @@ const PinInput: React.FC<pinProps> = props => {
         tintColor="#FF787E"
         numeric={true}
         onComplete={data => {
+          Keyboard.dismiss();
           // eslint-disable-next-line react/prop-types
           props.setFilled(true);
           if (data == props.authCode) {
