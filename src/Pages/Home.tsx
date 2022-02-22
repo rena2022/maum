@@ -15,10 +15,11 @@ import { resetToken } from '../Utils/keychain';
 import SkeletonUI from './SkeletonUI';
 import { LogBox } from 'react-native';
 
+const { width, height } = Dimensions.get('window');
+
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
-const { width, height } = Dimensions.get('window');
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -113,6 +114,7 @@ const Home = ({ navigation }: Props) => {
           source={require('../Assets/Lotties/callButton.json')}
           autoPlay
           loop
+          style={styles.ani}
         />
         <View style={styles.callBtnTxt}>
           <Typography
@@ -207,14 +209,17 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
   },
   callBtnContainer: {
-    flex: 7,
+    position: 'absolute',
+    top: height / 2 - width / 2,
+    zIndex: 3,
   },
   callBtnTxt: {
-    flex: 1,
-    justifyContent: 'center',
-    // position: 'absolute',
-    // top: height / 2 - 45,
-    // left: width / 2 - 60,
+    width: 118,
+    height: 97,
+    position: 'absolute',
+    left: width / 2 - 59,
+    top: width / 2 - 48.5,
+    zIndex: 2,
   },
   logOutContainer: {
     flex: 1,
@@ -228,5 +233,9 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: 'pink',
     borderRadius: 25,
+  },
+  ani: {
+    height: width,
+    zIndex: 1,
   },
 });
