@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Provider as StoreProvider } from 'react-redux';
 import { IP } from './src/Constants/keys';
 import Call from './src/Pages/Call';
+import Calling from './src/Pages/Calling/Calling';
 import Certification from './src/Pages/Certification/Certification';
 import Home from './src/Pages/Home';
 import Language from './src/Pages/Language';
@@ -20,8 +21,6 @@ import { service } from './src/Services/index';
 import TokenError from './src/Utils/AxiosError';
 import { getToken } from './src/Utils/keychain';
 import { checkPermissions } from './src/Utils/permissionCheck';
-import Calling from './src/Pages/Calling/Calling';
-import { networkCheck } from './src/Utils/phoneAlert';
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -83,7 +82,6 @@ const App = () => {
           })();
         } else {
           console.error(error);
-          net
         }
       }
     }

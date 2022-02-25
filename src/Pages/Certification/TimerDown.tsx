@@ -5,12 +5,13 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { service } from '../../Services/index';
 import { saveToken } from '../../Utils/keychain';
 import Typography from '../../Components/Typography';
+import BackgroundTimer from 'react-native-background-timer';
 
 interface TimerProps {
   setValidAuthCode: Dispatch<SetStateAction<string>>;
@@ -18,7 +19,7 @@ interface TimerProps {
 
 const TimerDown: React.FC<TimerProps> = props => {
   const reduxState = useSelector((state: RootState) => state);
-  const timerId = useRef<NodeJS.Timer | null>(null);
+  const timerId = useRef<any>(null);
   const [count, setCount] = useState(180);
 
   // 01, 02 등 두 자리 수 반환 함수
@@ -38,28 +39,33 @@ const TimerDown: React.FC<TimerProps> = props => {
       // 인증코드 수정
       await saveToken('authToken', data['authToken']);
       props.setValidAuthCode(data.authCode);
-      setCount(3);
+      setCount(180);
     } catch (error) {
       console.info(error);
     }
   }
 
+  if (Platform.OS == 'ios') {
+    BackgroundTimer.start();
+  }
+
   useEffect(() => {
     if (count > 0) {
-      timerId.current = setTimeout(() => {
+      timerId.current = BackgroundTimer.setTimeout(() => {
         setCount(count => count - 1);
       }, 1000);
     }
 
     return () => {
-      timerId.current && clearInterval(timerId.current);
+      timerId.current && BackgroundTimer.clearInterval(timerId.current);
     };
   }, [count]);
 
   useEffect(() => {
     // 만약 타임 아웃이 발생했을 경우
     if (count < 0) {
-      timerId.current && clearInterval(timerId.current);
+      BackgroundTimer.stop();
+      timerId.current && BackgroundTimer.clearInterval(timerId.current);
     }
   }, [count]);
 
