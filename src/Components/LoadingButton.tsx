@@ -24,7 +24,7 @@ const LoadingButton: React.FC<LoadingBtnProps> = props => {
 
 const styles = StyleSheet.create({
   btnContainer: {
-    width: 182,
+    width: 107,
     height: 60,
     borderRadius: 30,
     overflow: 'hidden',

@@ -51,6 +51,7 @@ const Home = ({ navigation }: Props) => {
         );
       },
       error => {
+        setLoading(false);
         console.log(error.code, error.message);
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 1000 },

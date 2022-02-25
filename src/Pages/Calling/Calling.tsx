@@ -76,8 +76,7 @@ const Calling = ({ route }: Props) => {
             textStyle={textStyle.locationText}
           />
           <View style={styles.callTimer}>
-            <TimerUp />
-
+            <TimerUp handleDisconnection={handleDisconnection} />
             <Typography
               value=" / 09:00"
               type="subTitle"

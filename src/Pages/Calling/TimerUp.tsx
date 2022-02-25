@@ -1,14 +1,12 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { StyleSheet, Text } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, Platform, Alert } from 'react-native';
+import BackgroundTimer from 'react-native-background-timer';
 
-const Timer: React.FC = () => {
-  const timerId = useRef<NodeJS.Timer | null>(null);
+interface TimerProps {
+  handleDisconnection: () => void;
+}
+const Timer: React.FC<TimerProps> = props => {
+  const timerId = useRef<any>(null);
   const [count, setCount] = useState(0);
 
   // 01, 02 등 두 자리 수 반환 함수
@@ -21,13 +19,13 @@ const Timer: React.FC = () => {
 
   useEffect(() => {
     if (count < 540) {
-      timerId.current = setTimeout(() => {
+      timerId.current = BackgroundTimer.setTimeout(() => {
         setCount(count => count + 1);
       }, 1000);
     }
 
     return () => {
-      timerId.current && clearInterval(timerId.current);
+      timerId.current && BackgroundTimer.clearInterval(timerId.current);
     };
   }, [count]);
 
